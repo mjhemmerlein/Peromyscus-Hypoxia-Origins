@@ -102,10 +102,10 @@ meanCounts$ID <- row.names(meanCounts)
 final <- merge(meanCounts, summary, by.x = "ID", by.y = c(7))
 
 # Write Out
-write.csv(final, "RNA_Seq_Output/Dream_RawFiles/LP_dreamGCF_Contrasts.csv")
-write.csv(DE_strain, "RNA_Seq_Output/Dream_RawFiles/LP_dreamGCF_strainDE.csv")
-write.csv(DE_o2, "RNA_Seq_Output/Dream_RawFiles/LP_dreamGCF_o2DE.csv")
-write.csv(DE_ixn, "RNA_Seq_Output/Dream_RawFiles/LP_dreamGCF_ixnDE.csv")
+write.csv(final, "RNA_Seq_Output/Dream_RawFiles/LP_dreamISO_Contrasts.csv")
+write.csv(DE_strain, "RNA_Seq_Output/Dream_RawFiles/LP_dreamISO_strainDE.csv")
+write.csv(DE_o2, "RNA_Seq_Output/Dream_RawFiles/LP_dreamISO_o2DE.csv")
+write.csv(DE_ixn, "RNA_Seq_Output/Dream_RawFiles/LP_dreamISO_ixnDE.csv")
 
 
 # BW Only ------------------
@@ -158,7 +158,7 @@ DE_o2 <- topTable( fitmm, coef='O22H', sort.by = "P", n = Inf)
 length(DE_o2$logFC[which(DE_o2$adj.P.Val < 0.05)])
 
 # Write Out
-write.csv(DE_o2, "RNA_Seq_Output/Dream_RawFiles/LP_BW_dreamGCF_o2DE_background.csv")
+write.csv(DE_o2, "RNA_Seq_Output/Dream_RawFiles/LP_BW_dreamISO_o2DE.csv")
 
 
 # ME Only ------------------
@@ -210,4 +210,4 @@ DE_o2 <- topTable( fitmm, coef='O22H', sort.by = "P", n = Inf)
 length(DE_o2$logFC[which(DE_o2$adj.P.Val < 0.05)])
 
 # Write Out
-write.csv(DE_o2, "RNA_Seq_Output/Dream_RawFiles/LP_ME_dreamGCF_o2DE_background.csv")
+write.csv(DE_o2, "RNA_Seq_Output/Dream_RawFiles/LP_ME_dreamISO_o2DE.csv")
