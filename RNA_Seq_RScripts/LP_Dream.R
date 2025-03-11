@@ -194,9 +194,9 @@ dim(dPman_0)
 
 dPman_ME <- dPman_0[keep,]
 dim(dPman_ME)
-plotMDS(dPman_BW, col = as.numeric(Sample_Info$Strain), labels = Sample_Info$Strain)
+plotMDS(dPman_ME, col = as.numeric(Sample_Info$Strain), labels = Sample_Info$Strain)
 
-rownames(Sample_Info) == colnames(dPman_BW)
+rownames(Sample_Info) == colnames(dPman_ME)
 
 # Interaction  
 param = SnowParam(8, "SOCK", progressbar=TRUE)
