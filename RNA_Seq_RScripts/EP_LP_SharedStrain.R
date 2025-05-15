@@ -131,19 +131,17 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
 
 #ggsave("Dream_Output/Hypoxia_Figs/Quadrant.png", width = 12, height = 6, units = "in", dpi = 300)
 
-
-
 # Top 3 genes per quadrant for labeling
 
 Top_genes = rbind(EP_LP_strain %>%
   filter(Quadrant == "Up-Up") %>%
   arrange(desc(LP_strain_logFC)) %>%
-  head(10), 
+  head(5), 
   
   EP_LP_strain %>%
   filter(Quadrant == "Up-Up") %>%
   arrange(desc(EP_strain_logFC)) %>%
-  head(10),
+  head(5),
   
   EP_LP_strain %>%
     filter(Quadrant == "Up-Down") %>%
@@ -158,12 +156,12 @@ Top_genes = rbind(EP_LP_strain %>%
   EP_LP_strain %>%
     filter(Quadrant == "Down-Down") %>%
     arrange(LP_strain_logFC) %>%
-    head(10), 
+    head(5), 
   
   EP_LP_strain %>%
     filter(Quadrant == "Down-Down") %>%
     arrange(EP_strain_logFC) %>%
-    head(10),
+    head(5),
   
   EP_LP_strain %>%
     filter(Quadrant == "Down-Up") %>%
@@ -194,29 +192,44 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
   theme_minimal(base_size = 14) +
   theme(legend.position = "none") +
   theme(
-    axis.text.y = element_text(face = "bold", size = 12),
-    axis.text.x = element_text(face = "bold", size = 12)) +
-  geom_text_repel(aes(label = Label), size = 3, na.rm = TRUE, color = "black") +
+    axis.text.y = element_text(face = "bold", size = 20),
+    axis.title.y = element_text(face = "bold", size = 24),
+    axis.title.x = element_text(face = "bold", size = 24),
+    axis.text.x = element_text(face = "bold", size = 20)) +
+  geom_text_repel(aes(label = Label), 
+                  size = 5, 
+                  na.rm = TRUE, 
+                  color = "black",
+                  segment.color = "black", 
+                  segment.size = 0.5,     
+                  segment.alpha = 0.5  ) +
   labs(y = "Late Pregnancy\npopulation logFC", x = "Early Pregnancy\npopulation logFC")
 
+ggsave("Dream_Output/Hypoxia_Figs/AllgenesQuadrant.png", width = 10, height = 10, units = "in", dpi = 300)
 
 # Highlight glycolysis genes ----
 
-Gly_genes <- c("LOC121824801", #hexokinase
-               "Gpi", #phosphohexose isomerase (aka glucose-6-phosphate isomerase GPI)
-               "Pfkm", #PFK1 muscle
-               "Aldoa", #Aldoa
-               #NO TPI (triose phosphate isomerase)
-               "LOC102904208", # GAPDH-like
-               "LOC102916082", # GAPDH-like
-               "LOC102924119", # GAPDH-like
-               #NO PGK (phosphoglycerate kinase)
-               "Pgam1", #phosphoglycerate mutase
-               "Eno1", #enolase
-               "LOC102923285", #PKM-like
-               "LOC102928417", #LHDA-like
-               "Ldha",
-               "LOC102927525")
+Gly_genes <- c("Aldoa",
+               "Bpgm",
+               "Eno1",
+               "Eno2",
+               "LOC102904208",
+               "LOC102916082",
+               "Gpi",
+               "Hk1",
+               "Hk2",
+               "Hkdc1",
+               "Pfkl",
+               "Pfkm",
+               "Pgam1",
+               "Pgam2",
+               "Pklr",
+               "LOC102923285",
+               "Pkm",
+               "Tpi1",
+               "LOC102928417",
+               "Ldha")
+
 
 EP_LP_strain = EP_LP_strain %>%
   mutate(Gly_flag = ifelse(Gene_ID %in% Gly_genes, "Glycolysis", "NA"))
@@ -262,7 +275,7 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
              alpha = 0.8, size = 3) + 
   xlim(-6,6) +
   ylim(-6,6) +
-  labs(y = NULL, x = NULL) +
+  labs(y = "Late Pregnancy\npopulation logFC", x = "Early Pregnancy\npopulation logFC") +
   scale_color_manual(values = quadrant_colors) +
   geom_hline(yintercept = upper_cutoff, linetype = "solid") +
   geom_hline(yintercept = lower_cutoff, linetype = "solid") +
@@ -271,11 +284,13 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
   theme_minimal(base_size = 14) +
   theme(legend.position = "none") +
   theme(
-    axis.text.y = element_text(face = "bold", size = 12),
-    axis.text.x = element_text(face = "bold", size = 12)) +
-  geom_text_repel(aes(label = Glyc_Label), size = 3, na.rm = TRUE, color = "black")
+    axis.text.y = element_text(face = "bold", size = 20),
+    axis.title.y = element_text(face = "bold", size = 24),
+    axis.title.x = element_text(face = "bold", size = 24),
+    axis.text.x = element_text(face = "bold", size = 20)) +
+  geom_text_repel(aes(label = Glyc_Label), size = 5, na.rm = TRUE, color = "black")
 
-
+ggsave("Dream_Output/Hypoxia_Figs/GlycQuadrant.png", width = 10, height = 10, units = "in", dpi = 300)
 
 # Individual quadrants -----
 

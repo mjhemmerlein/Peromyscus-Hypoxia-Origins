@@ -56,6 +56,13 @@ EP_POP_PBS = EP_ISO_Summary %>%
 
 EP_POP_PBS_GOResults = run_gost_analysis(EP_POP_PBS, background)
 
+
+
+
+
+
+
+
 # Hypoxia
 EP_O2 = EP_ISO_Summary %>%
   filter(O2_SIG == "SIG") %>%
@@ -63,12 +70,48 @@ EP_O2 = EP_ISO_Summary %>%
 
 EP_O2_GOResults = run_gost_analysis(EP_O2, background)
 
+# Hypoxia Up
+EP_O2_UP = EP_ISO_Summary %>%
+  filter(O2_SIG == "SIG") %>%
+  filter(O2_logFC > 0.5) %>%
+  pull(Pman_GeneID)
+
+EP_O2_UP_GOResults = run_gost_analysis(EP_O2_UP, background)
+
+# Hypoxia Down
+EP_O2_DOWN = EP_ISO_Summary %>%
+  filter(O2_SIG == "SIG") %>%
+  filter(O2_logFC < 0.5) %>%
+  pull(Pman_GeneID)
+
+EP_O2_DOWN_GOResults = run_gost_analysis(EP_O2_DOWN, background)
+
+
+
+
+
 # Interaction
 EP_IXN = EP_ISO_Summary %>%
   filter(IXN_SIG == "SIG") %>%
   pull(Pman_GeneID)
 
 EP_IXN_GOResults = run_gost_analysis(EP_IXN, background)
+
+# Interaction Up
+EP_IXN_UP = EP_ISO_Summary %>%
+  filter(IXN_SIG == "SIG") %>%
+  filter(IXN_logFC > 0.5) %>%
+  pull(Pman_GeneID)
+
+EP_IXN_UP_GOResults = run_gost_analysis(EP_IXN_UP, background)
+
+# Interaction Down
+EP_IXN_DOWN = EP_ISO_Summary %>%
+  filter(IXN_SIG == "SIG") %>%
+  filter(IXN_logFC < 0.5) %>%
+  pull(Pman_GeneID)
+
+EP_IXN_DOWN_GOResults = run_gost_analysis(EP_IXN_DOWN, background)
 
 
 

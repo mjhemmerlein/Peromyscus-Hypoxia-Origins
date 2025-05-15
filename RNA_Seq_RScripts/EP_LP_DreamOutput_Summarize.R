@@ -253,12 +253,12 @@ count(intersect(EP_ISO_BW
                   filter(BW_O2_SIG == "SIG") 
                 %>% select(Gene_ID)))
 
-BW_overlap = intersect(EP_ISO_BW
-                %>% filter(BW_O2_SIG == "SIG") 
+ME_overlap = (intersect(EP_ISO_ME
+                %>% filter(ME_O2_SIG == "SIG") 
                 %>% select(Gene_ID), 
-                LP_ISO_BW %>% 
-                  filter(BW_O2_SIG == "SIG") 
-                %>% select(Gene_ID))
+                LP_ISO_ME %>% 
+                  filter(ME_O2_SIG == "SIG") 
+                %>% select(Gene_ID)))
 
 count(intersect(EP_ISO_ME
                 %>% filter(ME_O2_SIG == "SIG") 

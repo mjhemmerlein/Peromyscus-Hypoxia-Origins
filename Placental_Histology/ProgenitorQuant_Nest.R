@@ -5,7 +5,8 @@ library(emmeans)
 library(broom.mixed)
 
 # Read and clean data
-EP <- read_xlsx("Dream_Raw_Data/EP BW_ME Quantification.xlsx") %>%
+
+EP <- read_xlsx("Placental_Histology/EP BW_ME Quantification.xlsx") %>%
   select(-Qualitative_Notes) %>%
   drop_na() %>%
   mutate(across(c(Mom, Pop, O2), as.factor),
@@ -19,64 +20,99 @@ EP <- read_xlsx("Dream_Raw_Data/EP BW_ME Quantification.xlsx") %>%
          Imp_Uniq = paste0(Mom,"_",Imp_Number),
          Imp_Uniq = as.factor(Imp_Uniq))
 
-# Variables to analyze
-vars <- c("LZ_Area", "Prog_Sum", "Prog_LZ")
+# JZ and Progenitor area ------
 
-# Nest and model each variable
+# Variables to analyze
+vars <- c("LZ_Area", "Prog_Sum")
+
 model_results <- vars %>%
   map_df(~{
     formula <- as.formula(paste(.x, "~ Pop*O2 + (1|Imp_Uniq)"))
     fit <- lmer(formula, data = EP)
+    summ <- summary(fit)
     
     tibble(
       Variable = .x,
-      Model = list(fit),
       ANOVA = list(anova(fit) %>% broom::tidy()),
-      Summary = list(summary(fit)),
+      Fixed_Effects = list(as.data.frame(coef(summary(fit)))),
+      Random_Effects = list(as.data.frame(VarCorr(fit))),
       Emmeans = list(emmeans(fit, ~ Pop*O2) %>% pairs() %>% as.data.frame())
     )
   })
 
+
 # View ANOVA results as tidy table
-model_results %>%
+ANOVAresults = model_results %>%
   select(Variable, ANOVA) %>%
   unnest(ANOVA)
 
-model_results %>%
+EMresults = model_results %>%
   select(Variable, Emmeans) %>%
   unnest(Emmeans)
 
+Fixresults = model_results %>%
+  select(Variable, Fixed_Effects) %>%
+  unnest(Fixed_Effects)
 
 
-# Filter and prep data
-EP_split <- EP %>%
-  filter(Pop %in% c("Lowland", "Highland")) %>%
-  select(Pop, Mom, O2, LZ_Area, Prog_Sum, Prog_LZ, Imp_Uniq)
+# Check for Type III
 
-# Pivot longer to group by response variable
-EP_long <- EP_split %>%
-  pivot_longer(cols = c(LZ_Area, Prog_Sum, Prog_LZ), names_to = "Variable", values_to = "Value")
+LZ = lmer(LZ_Area ~ Pop*O2 + (1|Imp_Uniq), data = EP)
+anova(LZ)
+summary(LZ)
 
-# Nest by Pop and Variable
-EP_nested <- EP_long %>%
-  group_by(Pop, Variable) %>%
-  nest()
+plot(resid(LZ))
+qqnorm(resid(LZ));qqline(resid(LZ))
 
-# Fit models and extract ANOVA + emmeans
-split_models <- EP_nested %>%
-  mutate(
-    Model = map(data, ~ lmer(Value ~ O2 + (1|Imp_Uniq), data = .x)),
-    ANOVA = map(Model, ~ anova(.x) %>% broom::tidy()),
-    Emmeans = map(Model, ~ emmeans(.x, ~ O2) %>% pairs() %>% as.data.frame())
-  )
+Prog = lmer(Prog_Sum ~ Pop*O2 + (1|Imp_Uniq), data = EP)
+anova(Prog)
+summary(Prog)
 
-split_models %>%
-  select(Pop, Variable, ANOVA) %>%
+plot(resid(Prog))
+qqnorm(resid(Prog));qqline(resid(Prog))
+
+
+# Progenitor with LZ as a predictor -------
+
+# Variables to analyze
+vars <- c("Prog_Sum")
+
+model_results <- vars %>%
+  map_df(~{
+    formula <- as.formula(paste(.x, "~ Pop*O2 + LZ_Area + (1|Imp_Uniq)"))
+    fit <- lmer(formula, data = EP)
+    summ <- summary(fit)
+    
+    tibble(
+      Variable = .x,
+      ANOVA = list(anova(fit) %>% broom::tidy()),
+      Fixed_Effects = list(as.data.frame(coef(summary(fit)))),
+      Random_Effects = list(as.data.frame(VarCorr(fit))),
+      Emmeans = list(emmeans(fit, ~ Pop*O2) %>% pairs() %>% as.data.frame())
+    )
+  })
+
+
+# View ANOVA results as tidy table
+ANOVAresults = model_results %>%
+  select(Variable, ANOVA) %>%
   unnest(ANOVA)
 
-split_models %>%
-  select(Pop, Variable, Emmeans) %>%
+EMresults = model_results %>%
+  select(Variable, Emmeans) %>%
   unnest(Emmeans)
 
+Fixresults = model_results %>%
+  select(Variable, Fixed_Effects) %>%
+  unnest(Fixed_Effects)
+
+# Check Type III
+
+Prog_LZ = lmer(Prog_Sum ~ Pop*O2 + LZ_Area + (1|Imp_Uniq), data = EP)
+anova(Prog_LZ)
+summary(Prog_LZ)
+
+plot(resid(Prog_LZ))
+qqnorm(resid(Prog_LZ));qqline(resid(Prog_LZ))
 
 

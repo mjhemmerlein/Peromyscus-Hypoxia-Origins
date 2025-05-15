@@ -97,14 +97,6 @@ LP_ISO_Strain$delabel <- ifelse(LP_ISO_Strain$Pman_GeneID %in% top_genes,
                                 LP_ISO_Strain$Pman_GeneID, 
                                 NA)
 
-# Volcano plot
-ggplot(data = LP_ISO_Strain, 
-       aes(x = strain_logFC, 
-           y = -log10(strain_adj_P.Val), 
-           label = delabel)) +
-  geom_point() +
-  geom_text_repel()
-
 # Enhanced volcano plot with colored points and cutoff lines
 ggplot(data = LP_ISO_Strain, 
        aes(x = strain_logFC, 
