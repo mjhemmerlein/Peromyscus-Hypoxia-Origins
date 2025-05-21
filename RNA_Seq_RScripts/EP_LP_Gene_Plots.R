@@ -281,7 +281,10 @@ plot_gene_expression_faceted("Ucp2", "Ucp2", EP_vobjdream, LP_vobjDream, EP_Samp
 plot_gene_expression_faceted("Pgd", "Pgd", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Rab18", "Rab18", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Slc16a3", "Slc16a3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
- 
+plot_gene_expression_faceted("Creb3l4", "Creb3l4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+
+
 
 # Mito genes
 
@@ -296,6 +299,7 @@ plot_gene_expression_faceted("Cs", "Cs", EP_vobjdream, LP_vobjDream, EP_Sample_I
 plot_gene_expression_faceted("Acly", "Acly", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Ampd2", "Ampd2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Gpd1", "Gpd1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ucp2", "Ucp2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
 
 # For saving:
