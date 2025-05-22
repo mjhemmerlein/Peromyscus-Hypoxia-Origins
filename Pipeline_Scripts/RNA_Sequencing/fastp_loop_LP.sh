@@ -3,7 +3,7 @@
 #SBATCH --job-name=execute_fastp
 #SBATCH --nodes=1
 #SBATCH --ntasks=24 # modify this number to reflect how many cores you want to use (up to 24)
-#SBATCH --time=10:00:00   # modify this to reflect how long to let the job go.
+#SBATCH --time=unlimited   # modify this to reflect how long to let the job go.
 #SBATCH --output=../03_output/logfiles/log_fastp_%J.txt
 
 ls *.fastq.gz | while read file; do
