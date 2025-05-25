@@ -1,13 +1,13 @@
 
 # Packages
-library('BiocParallel')
-library('dplyr')
-library('ggplot2')
-library('lme4')
-library('readxl')
-library('variancePartition')
-library('edgeR')
-library('Matrix')
+library(BiocParallel)
+library(dplyr)
+library(ggplot2)
+library(lme4)
+library(readxl)
+library(variancePartition)
+library(edgeR)
+library(Matrix)
 
 # Combined Analysis  ------------------
 Sample_Info <- read_xlsx("RNA_Seq_RawData/MetaData_EP.xlsx")
@@ -16,10 +16,8 @@ rownames(Sample_Info) = Sample_Info$Sample_ID
 Sample_Info = Sample_Info %>% filter(Strain == "BW" | Strain == "ME")
 
 # Read in Files + QC
-Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
-Pman_rawreads = Pman_rawreads %>%
-  filter(!is.na(Geneid))
 Pman_rawreads = `row.names<-`(Pman_rawreads, Pman_rawreads$Geneid)
 Pman_rawreads <- Pman_rawreads[,-c(1:6)]
 
@@ -28,7 +26,6 @@ Check = Sample_Info$Seq_Name
 colnames(Pman_rawreads) == Check
 
 colnames(Pman_rawreads) = rownames(Sample_Info)
-
 Pman_readcounts <- as.matrix(Pman_rawreads)
 dPman_0 <- DGEList(Pman_readcounts)
 
@@ -113,7 +110,7 @@ Sample_Info = Sample_Info %>% filter(Strain == "BW")
 BW = Sample_Info$Seq_Name
 
 # Read in Files + QC
-Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
 Pman_rawreads = Pman_rawreads %>%
   filter(!is.na(Geneid))
@@ -162,7 +159,7 @@ Sample_Info = Sample_Info %>% filter(Strain == "ME")
 ME = Sample_Info$Seq_Name
 
 # Read in Files + QC
-Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
 Pman_rawreads = Pman_rawreads %>%
   filter(!is.na(Geneid))

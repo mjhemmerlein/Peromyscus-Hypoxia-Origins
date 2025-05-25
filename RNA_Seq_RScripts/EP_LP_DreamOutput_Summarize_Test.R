@@ -123,7 +123,7 @@ sum(EP_ISO_Summary$APRI == "TRUE")
 # IsoQuant Late Pregnancy -----------
 # Filtered at 0.5 CPM
 
-LP_ISO_Strain = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_dreamISO_strainDE.csv")
+LP_ISO_Strain = read_csv("Test_Dream_RawFiles/LP_dreamISO_strainDE.csv")
 colnames(LP_ISO_Strain)[1] = "Gene_ID"
 
 LP_ISO_Strain = LP_ISO_Strain %>%
@@ -133,7 +133,7 @@ LP_ISO_Strain = LP_ISO_Strain %>%
   rename(strain_P.Val = P.Value) %>% 
   rename(strain_adj_P.Val = adj.P.Val)
 
-LP_ISO_O2 = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_dreamISO_o2DE.csv")
+LP_ISO_O2 = read_csv("Test_Dream_RawFiles/LP_dreamISO_o2DE.csv")
 colnames(LP_ISO_O2)[1] = "Gene_ID"
 
 LP_ISO_O2 = LP_ISO_O2 %>%
@@ -143,7 +143,7 @@ LP_ISO_O2 = LP_ISO_O2 %>%
   rename(O2_P.Val = P.Value) %>% 
   rename(O2_adj_P.Val = adj.P.Val)
 
-LP_ISO_IXN = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_dreamISO_ixnDE.csv")
+LP_ISO_IXN = read_csv("Test_Dream_RawFiles/LP_dreamISO_ixnDE.csv")
 colnames(LP_ISO_IXN)[1] = "Gene_ID"
 
 LP_ISO_IXN = LP_ISO_IXN %>%
@@ -153,7 +153,7 @@ LP_ISO_IXN = LP_ISO_IXN %>%
   rename(IXN_P.Val = P.Value) %>% 
   rename(IXN_adj_P.Val = adj.P.Val)
 
-LP_ISO_BW = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_BW_dreamISO_o2DE.csv")
+LP_ISO_BW = read_csv("Test_Dream_RawFiles/LP_BW_dreamISO_o2DE.csv")
 colnames(LP_ISO_BW)[1] = "Gene_ID"
 
 LP_ISO_BW = LP_ISO_BW %>%
@@ -163,7 +163,7 @@ LP_ISO_BW = LP_ISO_BW %>%
   rename(BW_O2_P.Val = P.Value) %>% 
   rename(BW_O2_adj_P.Val = adj.P.Val)
 
-LP_ISO_ME = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_ME_dreamISO_o2DE.csv")
+LP_ISO_ME = read_csv("Test_Dream_RawFiles/LP_ME_dreamISO_o2DE.csv")
 colnames(LP_ISO_ME)[1] = "Gene_ID"
 
 LP_ISO_ME = LP_ISO_ME %>%
@@ -184,7 +184,7 @@ LP_ISO_5 = left_join(LP_ISO_4, PBS, by = "Gene_ID") %>%
 LP_ISO_Summary = left_join(LP_ISO_5, Apriori, by = "Gene_ID") %>% 
   mutate(APRI = ifelse(is.na(APRI), "NA", PBS))
 
-# write.csv(LP_ISO_Summary, "RNA_Seq_Output/Dream_RawFiles/LP_ISO_Summary.csv")
+write.csv(LP_ISO_Summary, "Test_Dream_RawFiles/LP_ISO_Summary_test.csv")
 
 Orthologs = read_csv("RNA_Seq_Output/LP_orthologs.csv")
 Orthologs = Orthologs %>%
@@ -213,6 +213,12 @@ sum(LP_ISO_Summary$PBS == "TRUE")
 sum(LP_ISO_Summary$APRI == "TRUE")
 
 # write.csv(LP_ISO_Summary, "RNA_Seq_Output//LP_ISO_Ortho_Summary.csv")
+
+
+
+
+
+
 
 
 # Overlap between EP and LP in ISOQUANT
