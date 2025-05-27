@@ -112,8 +112,6 @@ BW = Sample_Info$Seq_Name
 # Read in Files + QC
 Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
-Pman_rawreads = Pman_rawreads %>%
-  filter(!is.na(Geneid))
 Pman_rawreads = `row.names<-`(Pman_rawreads, Pman_rawreads$Geneid)
 Pman_rawreads <- Pman_rawreads[,-c(1:6)]
 Pman_rawreads <- Pman_rawreads[,names(Pman_rawreads) %in% BW]
@@ -161,8 +159,6 @@ ME = Sample_Info$Seq_Name
 # Read in Files + QC
 Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
-Pman_rawreads = Pman_rawreads %>%
-  filter(!is.na(Geneid))
 Pman_rawreads = `row.names<-`(Pman_rawreads, Pman_rawreads$Geneid)
 Pman_rawreads <- Pman_rawreads[,-c(1:6)]
 Pman_rawreads <- Pman_rawreads[,names(Pman_rawreads) %in% ME]

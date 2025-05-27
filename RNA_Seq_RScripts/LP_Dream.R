@@ -1,13 +1,13 @@
 
 # Packages
-library('BiocParallel')
-library('dplyr')
-library('ggplot2')
-library('lme4')
-library('readxl')
-library('variancePartition')
-library('edgeR')
-library('Matrix')
+library(BiocParallel)
+library(dplyr)
+library(ggplot2)
+library(lme4)
+library(readxl)
+library(variancePartition)
+library(edgeR)
+library(Matrix)
 
 # Combined Analysis  ------------------
 Sample_Info <- read_xlsx("RNA_Seq_RawData/MetaData_LP.xlsx")
@@ -18,10 +18,8 @@ Sample_Info = Sample_Info %>% filter(Strain == "BW" | Strain == "ME")
 Sample_Info = Sample_Info[-which(rownames(Sample_Info) == "LZ089"),]
 
 # Read in Files + QC
-Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
-Pman_rawreads = Pman_rawreads %>%
-  filter(!is.na(Geneid))
 Pman_rawreads = `row.names<-`(Pman_rawreads, Pman_rawreads$Geneid)
 Pman_rawreads <- Pman_rawreads[,-c(1:6)]
 Pman_rawreads <- subset(Pman_rawreads, select = -c(RNA201216ZC_LZ089_S16_L001_fastp_pman_Halign_liberal.bam))
@@ -119,7 +117,7 @@ Sample_Info = Sample_Info %>% filter(Strain == "BW")
 BW = Sample_Info$Seq_Name
 
 # Read in Files + QC
-Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
 Pman_rawreads = Pman_rawreads %>%
   filter(!is.na(Geneid))
@@ -171,7 +169,7 @@ Sample_Info = Sample_Info %>% filter(Strain == "ME")
 ME = Sample_Info$Seq_Name
 
 # Read in Files + QC
-Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
 Pman_rawreads = Pman_rawreads %>%
   filter(!is.na(Geneid))
