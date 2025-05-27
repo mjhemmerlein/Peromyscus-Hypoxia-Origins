@@ -177,7 +177,7 @@ LP_ISO_5 = left_join(LP_ISO_4, PBS, by = "Gene_ID") %>%
 LP_ISO_Summary = left_join(LP_ISO_5, Apriori, by = "Gene_ID") %>% 
   mutate(APRI = ifelse(is.na(APRI), "NA", PBS))
 
-# write.csv(LP_ISO_Summary, "RNA_Seq_Output/Dream_RawFiles/LP_ISO_Summary.csv")
+# write.csv(LP_ISO_Summary, "RNA_Seq_Output/Dream_RawFiles/LP_LZ_ISO_Summary.csv")
 
 Orthologs = read_csv("RNA_Seq_Output/LP_orthologs.csv")
 Orthologs = Orthologs %>%
@@ -206,6 +206,103 @@ sum(LP_ISO_Summary$PBS == "TRUE")
 sum(LP_ISO_Summary$APRI == "TRUE")
 
 # write.csv(LP_ISO_Summary, "RNA_Seq_Output//LP_ISO_Ortho_Summary.csv")
+
+
+# IsoQuant Late Pregnancy JZ -----------
+# Filtered at 0.5 CPM
+
+LP_JZ_Strain = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_JZ_dreamISO_strainDE.csv")
+colnames(LP_JZ_Strain)[1] = "Gene_ID"
+
+LP_JZ_Strain = LP_JZ_Strain %>%
+  select(Gene_ID, logFC, P.Value, adj.P.Val) %>%
+  mutate(strain_SIG = ifelse(adj.P.Val < 0.05, "SIG", "NA")) %>%
+  rename(strain_logFC = logFC) %>% 
+  rename(strain_P.Val = P.Value) %>% 
+  rename(strain_adj_P.Val = adj.P.Val)
+
+LP_JZ_O2 = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_JZ_dreamISO_o2DE.csv")
+colnames(LP_JZ_O2)[1] = "Gene_ID"
+
+LP_JZ_O2 = LP_JZ_O2 %>%
+  select(Gene_ID, logFC, P.Value, adj.P.Val) %>%
+  mutate(O2_SIG = ifelse(adj.P.Val < 0.05, "SIG", "NA")) %>% 
+  rename(O2_logFC = logFC) %>% 
+  rename(O2_P.Val = P.Value) %>% 
+  rename(O2_adj_P.Val = adj.P.Val)
+
+LP_JZ_IXN = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_JZ_dreamISO_ixnDE.csv")
+colnames(LP_JZ_IXN)[1] = "Gene_ID"
+
+LP_JZ_IXN = LP_JZ_IXN %>%
+  select(Gene_ID, logFC, P.Value, adj.P.Val) %>%
+  mutate(IXN_SIG = ifelse(adj.P.Val < 0.05, "SIG", "NA")) %>% 
+  rename(IXN_logFC = logFC) %>% 
+  rename(IXN_P.Val = P.Value) %>% 
+  rename(IXN_adj_P.Val = adj.P.Val)
+
+LP_JZ_BW = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_JZ_BW_dreamISO_o2DE.csv")
+colnames(LP_JZ_BW)[1] = "Gene_ID"
+
+LP_JZ_BW = LP_JZ_BW %>%
+  select(Gene_ID, logFC, P.Value, adj.P.Val) %>%
+  mutate(BW_O2_SIG = ifelse(adj.P.Val < 0.05, "SIG", "NA")) %>% 
+  rename(BW_O2_logFC = logFC) %>% 
+  rename(BW_O2_P.Val = P.Value) %>% 
+  rename(BW_O2_adj_P.Val = adj.P.Val)
+
+LP_JZ_ME = read_csv("RNA_Seq_Output/Dream_RawFiles/LP_JZ_ME_dreamISO_o2DE.csv")
+colnames(LP_JZ_ME)[1] = "Gene_ID"
+
+LP_JZ_ME = LP_JZ_ME %>%
+  select(Gene_ID, logFC, P.Value, adj.P.Val) %>%
+  mutate(ME_O2_SIG = ifelse(adj.P.Val < 0.05, "SIG", "NA")) %>% 
+  rename(ME_O2_logFC = logFC) %>% 
+  rename(ME_O2_P.Val = P.Value) %>% 
+  rename(ME_O2_adj_P.Val = adj.P.Val)
+
+LP_JZ_1 = left_join(LP_JZ_Strain, LP_JZ_O2, by = "Gene_ID")
+LP_JZ_2 = left_join(LP_JZ_1, LP_JZ_IXN, by = "Gene_ID" )
+LP_JZ_3 = left_join(LP_JZ_2, LP_JZ_BW, by = "Gene_ID")
+LP_JZ_4 = left_join(LP_JZ_3, LP_JZ_ME, by = "Gene_ID")
+
+LP_JZ_5 = left_join(LP_JZ_4, PBS, by = "Gene_ID") %>% 
+  mutate(PBS = ifelse(is.na(PBS), "NA", PBS))
+
+LP_JZ_Summary = left_join(LP_JZ_5, Apriori, by = "Gene_ID") %>% 
+  mutate(APRI = ifelse(is.na(APRI), "NA", PBS))
+
+# write.csv(LP_JZ_Summary, "RNA_Seq_Output/Dream_RawFiles/LP_JZ_ISO_Summary.csv")
+
+Orthologs = read_csv("RNA_Seq_Output/LP_orthologs.csv")
+Orthologs = Orthologs %>%
+  select(Gene_ID, P_maniculatus_ID, P_maniculatus_attr, M_musculus_ID, M_musculus_attr)
+
+LP_JZ_Summary <- LP_JZ_Summary %>%
+  left_join(Orthologs, by = "Gene_ID") %>%
+  relocate(25:27, .after = 1) %>% # Move columns with "Ortholog" to positions 2-5
+  select(-P_maniculatus_ID)
+
+LP_JZ_Summary <- LP_JZ_Summary %>%
+  mutate(
+    Pman_GeneID = ifelse(grepl("^LOC", Gene_ID), M_musculus_ID, 
+                         ifelse(!is.na(Gene_ID), Gene_ID, M_musculus_ID)),
+    Pman_GeneID = ifelse(is.na(Pman_GeneID), Gene_ID, Pman_GeneID)
+  ) %>%
+  relocate(Pman_GeneID, .before = everything())
+
+# Summary
+sum(LP_JZ_Summary$strain_SIG == "SIG")
+sum(LP_JZ_Summary$O2_SIG == "SIG")
+sum(LP_JZ_Summary$IXN_SIG == "SIG")
+sum(LP_JZ_Summary$BW_O2_SIG == "SIG")
+sum(LP_JZ_Summary$ME_O2_SIG == "SIG")
+sum(LP_JZ_Summary$PBS == "TRUE")
+sum(LP_JZ_Summary$APRI == "TRUE")
+
+# write.csv(LP_ISO_Summary, "RNA_Seq_Output//LP_ISO_Ortho_Summary.csv")
+
+
 
 
 # Overlap between EP and LP in ISOQUANT
