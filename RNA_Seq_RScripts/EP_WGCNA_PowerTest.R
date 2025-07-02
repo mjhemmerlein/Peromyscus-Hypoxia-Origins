@@ -1,5 +1,5 @@
 
-library(WGCNA)
+library(WGCNA, exclude = "GO.db")
 library(dplyr)
 library(edgeR)
 library(lme4)
