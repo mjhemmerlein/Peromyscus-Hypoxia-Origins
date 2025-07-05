@@ -82,27 +82,9 @@ match(rownames(TraitsBW_EP), rownames(ExprData_BWEP))
 # WGCNA
 
 # Lowlanders, i.e., BW ####
-# Cluster the samples to check for outliers
-sampleTreeBW = hclust(dist(ExprData_BWEP), method = "average")
-# Plot the sample trees
-plot(sampleTreeBW, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
-     cex.axis = 1.5, cex.main = 2) 
 
-# Call the network topology analysis function
-NetBWEP = blockwiseModules(ExprData_BWEP, 
-                           power = 20, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "EP_WGCNA_Output/EPBWExprTOM",
-                           verbose = 3)
+load("EP_WGCNA_Output/BWEP_network.RData")
 
-load("EP_WGCNA_Output/EPBWExprTOM-block.1.RData"); load("EP_WGCNA_Output/EPBWExprTOM-block.2.RData")
 table(NetBWEP$colors)
 moduleLabelsBWEP = NetBWEP$colors
 moduleColorsBWEP = labels2colors(NetBWEP$colors)
@@ -113,51 +95,10 @@ geneTreeBWEP = NetBWEP$dendrograms[[1]]
 table(moduleColorsBWEP)
 dim(table(moduleColorsBWEP))
 
-plotDendroAndColors(
-  NetBWEP$dendrograms[[1]],
-  moduleColorsBWEP[NetBWEP$blockGenes[[1]]],
-  "Module colors",
-  dendroLabels = FALSE,
-  hang = 0.03, 
-  addGuide = TRUE,
-  guideHang = 0.05)
-
-# Recalculate MEs with color labels
-MEs0 = moduleEigengenes(ExprData_BWEP, moduleColorsBWEP)$eigengenes
-MEsBW_EP = orderMEs(MEs0) #the rownames of this dataset are equal to Expr
-
-# write.csv(MEsBW_EP, "EP_WGCNA_Output/EP_BW_moduleEigengenes.csv")
-# save(NetBWEP, MEsBW_EP, moduleLabelsBWEP, moduleColorsBWEP, geneTreeBWEP, file = "EP_WGCNA_Output/BWEP_network.RData")
-
-load("EP_WGCNA_Output/BWEP_network.RData")
-
-
-
-
 ## Highlanders WGCNA network build, i.e., ME ####
 
-#cluster the samples to check for outliers
-sampleTreeMEEP = hclust(dist(ExprData_MEEP), method = "average")
-# Plot the sample trees
-plot(sampleTreeMEEP, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
-     cex.axis = 1.5, cex.main = 2) 
+load("EP_WGCNA_Output/MEEP_network.RData")
 
-# Call the network topology analysis function
-NetMEEP = blockwiseModules(ExprData_MEEP, 
-                           power = 20, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", 
-                           networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "EP_WGCNA_Output/EPMEExprTOM",
-                           verbose = 3)
-
-load("EP_WGCNA_Output/EPMEExprTOM-block.1.RData"); load("EP_WGCNA_Output/EPMEExprTOM-block.2.RData")
 table(NetMEEP$colors)
 moduleLabelsMEEP = NetMEEP$colors
 moduleColorsMEEP = labels2colors(NetMEEP$colors)
@@ -167,30 +108,6 @@ MEsMEEP = NetMEEP$MEs # These are module eigengenes:first principal component of
 geneTreeMEEP = NetMEEP$dendrograms[[1]]
 table(moduleColorsMEEP)
 dim(table(moduleColorsMEEP))
-
-plotDendroAndColors(
-  NetMEEP$dendrograms[[1]],
-  moduleColorsMEEP[NetMEEP$blockGenes[[1]]],
-  "Module colors",
-  dendroLabels = FALSE,
-  hang = 0.03, 
-  addGuide = TRUE,
-  guideHang = 0.05)
-
-# Recalculate MEs with color labels
-MEs0ME = moduleEigengenes(ExprData_MEEP, moduleColorsMEEP)$eigengenes
-MEsMEEP = orderMEs(MEs0ME) #the rownames of this dataset are equal to Expr
-
-#Add metadata to this dataframe
-MEsMEEP$hypoxia = TraitsME_EP$O2
-MEsMEEP$fetalMass = TraitsME_EP$Fetus
-
-# write.csv(MEsMEEP, "EP_WGCNA_Output/EP_ME_moduleEigengenes.csv")
-
-# save(NetMEEP, MEsMEEP, moduleLabelsMEEP, moduleColorsMEEP, geneTreeMEEP, file = "EP_WGCNA_Output/MEEP_network.RData")
-load("EP_WGCNA_Output/MEEP_network.RData")
-
-
 
 # Network Preservation analysis ####
 # Number of data sets that we work with
