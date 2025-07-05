@@ -265,7 +265,7 @@ text(sftME$fitIndices[,1], sftME$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # POWER = 8
 NetMEEP = blockwiseModules(ExprData_MEEP, 
-                           power = 20, 
+                           power = 8, 
                            maxBlockSize = 14000,
                            TOMType = "signed", 
                            networkType = "signed hybrid",
@@ -291,7 +291,7 @@ dim(table(moduleColorsMEEP))
 
 # POWER = 12
 NetMEEP = blockwiseModules(ExprData_MEEP, 
-                           power = 20, 
+                           power = 12, 
                            maxBlockSize = 14000,
                            TOMType = "signed", 
                            networkType = "signed hybrid",
@@ -317,7 +317,7 @@ dim(table(moduleColorsMEEP))
 
 # POWER = 14
 NetMEEP = blockwiseModules(ExprData_MEEP, 
-                           power = 20, 
+                           power = 14, 
                            maxBlockSize = 14000,
                            TOMType = "signed", 
                            networkType = "signed hybrid",
