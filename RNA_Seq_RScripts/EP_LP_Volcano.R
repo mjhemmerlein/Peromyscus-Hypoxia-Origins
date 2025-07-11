@@ -9,9 +9,11 @@ library(readr)
 library(tidyverse)
 
 # Load and clean data
-EP_ISO_Strain <- read_xlsx("RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx")
+EP_ISO_Strain <- read.csv("RNA_Seq_Output/Dream_RawFiles/EP_ISO_Summary.csv")
+
 
 EP_ISO_Strain = EP_ISO_Strain %>%
+  rename(Pman_GeneID = Gene_ID) %>%
   select(c(Pman_GeneID, strain_logFC, strain_adj_P.Val))
 
 # Set cutoffs

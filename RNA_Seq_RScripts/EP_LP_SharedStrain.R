@@ -83,7 +83,7 @@ lower_cutoff <- -0.5
 upper_cutoff <- 0.5
 
 # Define color mapping for the quadrants, including gray for the cutoff range
-quadrant_colors <- c("Up-Up" = "coral2", 
+quadrant_colors <- c("Up-Up" = "tomato2", 
                      "Up-Down" = "darkolivegreen", 
                      "Down-Down" = "deepskyblue3", 
                      "Down-Up" = "blueviolet")
@@ -112,9 +112,9 @@ Strain_summary = EP_LP_strain %>%
 
 # Create a 4-quadrant scatter plot
 ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadrant)) +
-  geom_point(alpha = 0.6, size = 3.5) +
-  xlim(-6,6) +
-  ylim(-8,8) +
+  geom_point(size = 3.5) +
+  xlim(-6.5,6.5) +
+  ylim(-6.5,6.5) +
   labs(y = "Late Pregnancy\npopulation logFC", x = "Early Pregnancy\npopulation logFC") +
   scale_color_manual(values = quadrant_colors) +
   geom_hline(yintercept = upper_cutoff, linetype = "solid") +
@@ -129,7 +129,7 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
     axis.text.y = element_text(face = "bold", size = 12),
     axis.text.x = element_text(face = "bold", size = 12))
 
-#ggsave("Dream_Output/Hypoxia_Figs/Quadrant.png", width = 12, height = 6, units = "in", dpi = 300)
+ggsave("Plots/Quadrant_Plots/Unlabeled_Quad.pdf", width = 7, height = 7, units = "in", dpi = 300)
 
 # Top 3 genes per quadrant for labeling
 
@@ -205,7 +205,7 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
                   segment.alpha = 0.5  ) +
   labs(y = "Late Pregnancy\npopulation logFC", x = "Early Pregnancy\npopulation logFC")
 
-ggsave("Dream_Output/Hypoxia_Figs/AllgenesQuadrant.png", width = 10, height = 10, units = "in", dpi = 300)
+# ggsave("Dream_Output/Hypoxia_Figs/AllgenesQuadrant.png", width = 10, height = 10, units = "in", dpi = 300)
 
 # Highlight glycolysis genes ----
 
@@ -290,7 +290,27 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
     axis.text.x = element_text(face = "bold", size = 20)) +
   geom_text_repel(aes(label = Glyc_Label), size = 5, na.rm = TRUE, color = "black")
 
-ggsave("Dream_Output/Hypoxia_Figs/GlycQuadrant.png", width = 10, height = 10, units = "in", dpi = 300)
+# ggsave("Dream_Output/Hypoxia_Figs/GlycQuadrant.png", width = 10, height = 10, units = "in", dpi = 300)
+
+
+# Combined Quadrant and Glycolysis Plot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Individual quadrants -----
 

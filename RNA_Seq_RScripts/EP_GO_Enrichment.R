@@ -49,17 +49,21 @@ EP_POP = EP_ISO_Summary %>%
 
 EP_POP_GOResults = run_gost_analysis(EP_POP, background)
 
-EP_POP_PBS = EP_ISO_Summary %>%
+# Pop Up
+EP_POP_UP = EP_ISO_Summary %>%
   filter(strain_SIG == "SIG") %>%
-  filter(PBS == "TRUE") %>%
+  filter(O2_logFC > 1) %>%
   pull(Pman_GeneID)
 
-EP_POP_PBS_GOResults = run_gost_analysis(EP_POP_PBS, background)
+EP_POP_UP_GOResults = run_gost_analysis(EP_POP_UP, background)
 
 
+EP_POP_DOWN = EP_ISO_Summary %>%
+  filter(strain_SIG == "SIG") %>%
+  filter(O2_logFC < -1) %>%
+  pull(Pman_GeneID)
 
-
-
+EP_POP_DOWN_GOResults = run_gost_analysis(EP_POP_DOWN, background)
 
 
 
@@ -81,7 +85,7 @@ EP_O2_UP_GOResults = run_gost_analysis(EP_O2_UP, background)
 # Hypoxia Down
 EP_O2_DOWN = EP_ISO_Summary %>%
   filter(O2_SIG == "SIG") %>%
-  filter(O2_logFC < 0.5) %>%
+  filter(O2_logFC < -0.5) %>%
   pull(Pman_GeneID)
 
 EP_O2_DOWN_GOResults = run_gost_analysis(EP_O2_DOWN, background)
@@ -98,6 +102,11 @@ EP_IXN = EP_ISO_Summary %>%
 EP_IXN_GOResults = run_gost_analysis(EP_IXN, background)
 
 # Interaction Up
+
+count(EP_ISO_Summary %>%
+  filter(IXN_SIG == "SIG") %>%
+  filter(IXN_logFC > 0.5))
+
 EP_IXN_UP = EP_ISO_Summary %>%
   filter(IXN_SIG == "SIG") %>%
   filter(IXN_logFC > 0.5) %>%
@@ -108,43 +117,25 @@ EP_IXN_UP_GOResults = run_gost_analysis(EP_IXN_UP, background)
 # Interaction Down
 EP_IXN_DOWN = EP_ISO_Summary %>%
   filter(IXN_SIG == "SIG") %>%
-  filter(IXN_logFC < 0.5) %>%
+  filter(IXN_logFC < -0.5) %>%
   pull(Pman_GeneID)
 
 EP_IXN_DOWN_GOResults = run_gost_analysis(EP_IXN_DOWN, background)
 
 
-
-
-# Shared across EP and LP
-EP_LP_strain = read_csv("RNA_Seq_Output/EP_LP_SharedStrain.csv")
-
-# EP Population Upregulated
-EP_POP_UP = EP_LP_strain %>%
-  filter(diffexpressed_EP == "UP") %>%
+# BW
+EP_BW = EP_ISO_Summary %>%
+  filter(BW_O2_SIG == "SIG") %>%
   pull(Pman_GeneID)
 
-EP_POP_UP_GOResults = run_gost_analysis(EP_POP_UP, background)
+EP_BW_GOResults = run_gost_analysis(EP_BW, background)
 
-# EP Population Downregulated
-EP_POP_DOWN = EP_LP_strain %>%
-  filter(diffexpressed_EP == "DOWN") %>%
-  filter(diffexpressed_LP == "DOWN") %>%
+
+# ME Up
+EP_ME = EP_ISO_Summary %>%
+  filter(ME_O2_SIG == "SIG") %>%
   pull(Pman_GeneID)
 
-EP_POP_DOWN_GOResults = run_gost_analysis(EP_POP_DOWN, background)
+EP_ME_GOResults = run_gost_analysis(EP_ME, background)
 
-# Up-Up
-UP_UP = EP_LP_strain %>%
-  filter(Quadrant == "Up-Up") %>%
-  pull(Pman_GeneID)
-
-UP_UP_GOResults = run_gost_analysis(UP_UP, background)
-
-# Down-Down
-DOWN_DOWN = EP_LP_strain %>%
-  filter(Quadrant == "Down-Down") %>%
-  pull(Pman_GeneID)
-
-DOWN_DOWN_GOResults = run_gost_analysis(DOWN_DOWN, background)
 

@@ -84,7 +84,7 @@ EP_ISO_Summary = left_join(EP_ISO_5, Apriori, by = "Gene_ID") %>%
 
 # write.csv(EP_ISO_Summary, "RNA_Seq_Output/Dream_RawFiles/EP_ISO_Summary.csv")
 
-Orthologs = read_csv("RNA_Seq_Output/EP_orthologs.csv")
+Orthologs = read_csv("RNA_Seq_RawData/EP_orthologs.csv")
 Orthologs = Orthologs %>%
   select(Gene_ID, P_maniculatus_ID, P_maniculatus_attr, M_musculus_ID, M_musculus_attr)
 
@@ -179,7 +179,7 @@ LP_ISO_Summary = left_join(LP_ISO_5, Apriori, by = "Gene_ID") %>%
 
 # write.csv(LP_ISO_Summary, "RNA_Seq_Output/Dream_RawFiles/LP_LZ_ISO_Summary.csv")
 
-Orthologs = read_csv("RNA_Seq_Output/LP_orthologs.csv")
+Orthologs = read_csv("RNA_Seq_RawData/LP_orthologs.csv")
 Orthologs = Orthologs %>%
   select(Gene_ID, P_maniculatus_ID, P_maniculatus_attr, M_musculus_ID, M_musculus_attr)
 
@@ -307,60 +307,138 @@ sum(LP_JZ_Summary$APRI == "TRUE")
 
 # Overlap between EP and LP in ISOQUANT
 
+# EP
+O2_overlap <- EP_ISO_Summary %>%
+  filter(O2_SIG == "SIG", BW_O2_SIG == "SIG") %>%
+  select(Gene_ID)
 
-count(intersect(EP_ISO_Strain
-                %>% filter(strain_SIG == "SIG") 
-                %>% select(Gene_ID), 
-                LP_ISO_Strain %>% 
-                  filter(strain_SIG == "SIG") 
-                %>% select(Gene_ID)))
+O2_overlap <- EP_ISO_Summary %>%
+  filter(O2_SIG == "SIG", ME_O2_SIG == "SIG") %>%
+  select(Gene_ID)
 
-count(intersect(EP_ISO_O2
-                %>% filter(O2_SIG == "SIG") 
-                %>% select(Gene_ID), 
-                LP_ISO_O2 %>% 
-                  filter(O2_SIG == "SIG") 
-                %>% select(Gene_ID)))
+# LP LZ
+O2_overlap <- LP_ISO_Summary %>%
+  filter(O2_SIG == "SIG", BW_O2_SIG == "SIG") %>%
+  select(Gene_ID)
 
-O2_overlap = intersect(EP_ISO_O2
-                             %>% filter(O2_SIG == "SIG") 
-                             %>% select(Gene_ID), 
-                             LP_ISO_O2 %>% 
-                               filter(O2_SIG == "SIG") 
-                             %>% select(Gene_ID))
+O2_overlap <- LP_ISO_Summary %>%
+  filter(O2_SIG == "SIG", ME_O2_SIG == "SIG") %>%
+  select(Gene_ID)
 
-count(intersect(EP_ISO_IXN
-                %>% filter(IXN_SIG == "SIG") 
-                %>% select(Gene_ID), 
-                LP_ISO_IXN %>% 
-                  filter(IXN_SIG == "SIG") 
-                %>% select(Gene_ID)))
+# LP JZ
+O2_overlap <- LP_JZ_Summary %>%
+  filter(O2_SIG == "SIG", BW_O2_SIG == "SIG") %>%
+  select(Gene_ID)
 
-ixn_overlap = intersect(EP_ISO_IXN
-                %>% filter(IXN_SIG == "SIG") 
-                %>% select(Gene_ID), 
-                LP_ISO_IXN %>% 
-                  filter(IXN_SIG == "SIG") 
-                %>% select(Gene_ID))
+O2_overlap <- LP_JZ_Summary %>%
+  filter(O2_SIG == "SIG", ME_O2_SIG == "SIG") %>%
+  select(Gene_ID)
 
-count(intersect(EP_ISO_BW
-                %>% filter(BW_O2_SIG == "SIG") 
-                %>% select(Gene_ID), 
-                LP_ISO_BW %>% 
-                  filter(BW_O2_SIG == "SIG") 
-                %>% select(Gene_ID)))
 
-ME_overlap = (intersect(EP_ISO_ME
-                %>% filter(ME_O2_SIG == "SIG") 
-                %>% select(Gene_ID), 
-                LP_ISO_ME %>% 
-                  filter(ME_O2_SIG == "SIG") 
-                %>% select(Gene_ID)))
 
-count(intersect(EP_ISO_ME
-                %>% filter(ME_O2_SIG == "SIG") 
-                %>% select(Gene_ID), 
-                LP_ISO_ME %>% 
-                  filter(ME_O2_SIG == "SIG") 
-                %>% select(Gene_ID)))
 
+
+
+count_sig_overlap <- function(df1, df2, sig_col) {
+  genes1 <- df1 %>% filter(.data[[sig_col]] == "SIG") %>% pull(Gene_ID)
+  genes2 <- df2 %>% filter(.data[[sig_col]] == "SIG") %>% pull(Gene_ID)
+  length(intersect(genes1, genes2))
+}
+
+count_sig_overlap(EP_ISO_Strain, LP_ISO_Strain, "strain_SIG")
+count_sig_overlap(EP_ISO_O2, LP_ISO_O2, "O2_SIG")
+count_sig_overlap(EP_ISO_IXN, LP_ISO_IXN, "IXN_SIG")
+count_sig_overlap(EP_ISO_BW, LP_ISO_BW, "BW_O2_SIG")
+count_sig_overlap(EP_ISO_ME, LP_ISO_ME, "ME_O2_SIG")
+
+count_sig_overlap(EP_ISO_Strain, LP_JZ_Strain, "strain_SIG")
+count_sig_overlap(EP_ISO_O2, LP_JZ_O2, "O2_SIG")
+count_sig_overlap(EP_ISO_IXN, LP_JZ_IXN, "IXN_SIG")
+count_sig_overlap(EP_ISO_BW, LP_JZ_BW, "BW_O2_SIG")
+count_sig_overlap(EP_ISO_ME, LP_JZ_ME, "ME_O2_SIG")
+
+count_sig_overlap(LP_ISO_Strain, LP_JZ_Strain, "strain_SIG")
+count_sig_overlap(LP_ISO_O2, LP_JZ_O2, "O2_SIG")
+count_sig_overlap(LP_ISO_IXN, LP_JZ_IXN, "IXN_SIG")
+count_sig_overlap(LP_ISO_BW, LP_JZ_BW, "BW_O2_SIG")
+count_sig_overlap(LP_ISO_ME, LP_JZ_ME, "ME_O2_SIG")
+
+
+
+
+
+library(UpSetR)
+
+# Make sure the data frame is clean and logical
+upset_data <- data.frame(
+  Gene_ID = unique(c(
+    EP_ISO_Strain$Gene_ID,
+    LP_ISO_Strain$Gene_ID
+  ))
+) %>%
+  mutate(
+    EP = Gene_ID %in% (EP_ISO_Strain %>% filter(strain_SIG == "SIG") %>% pull(Gene_ID)),
+    LP = Gene_ID %in% (LP_ISO_Strain %>% filter(strain_SIG == "SIG") %>% pull(Gene_ID)),
+  )
+
+upset_data <- upset_data %>%
+  mutate(across(c(EP, LP), as.integer))
+
+upset(upset_data[, c("EP", "LP")], sets = c("EP", "LP"))
+
+
+# Make sure the data frame is clean and logical
+upset_data <- data.frame(
+  Gene_ID = unique(c(
+    EP_ISO_O2$Gene_ID,
+    LP_ISO_O2$Gene_ID
+  ))
+) %>%
+  mutate(
+    EP = Gene_ID %in% (EP_ISO_O2 %>% filter(O2_SIG == "SIG") %>% pull(Gene_ID)),
+    LP = Gene_ID %in% (LP_ISO_O2 %>% filter(O2_SIG == "SIG") %>% pull(Gene_ID)),
+  )
+
+upset_data <- upset_data %>%
+  mutate(across(c(EP, LP), as.integer))
+
+upset(upset_data[, c("EP", "LP")], sets = c("EP", "LP"))
+
+
+# Make sure the data frame is clean and logical
+upset_data <- data.frame(
+  Gene_ID = unique(c(
+    EP_ISO_O2$Gene_ID,
+    EP_ISO_BW$Gene_ID,
+    EP_ISO_ME$Gene_ID
+  ))
+) %>%
+  mutate(
+    EP = Gene_ID %in% (EP_ISO_O2 %>% filter(O2_SIG == "SIG") %>% pull(Gene_ID)),
+    EP_BW = Gene_ID %in% (EP_ISO_BW %>% filter(BW_O2_SIG == "SIG") %>% pull(Gene_ID)),
+    EP_ME = Gene_ID %in% (EP_ISO_ME %>% filter(ME_O2_SIG == "SIG") %>% pull(Gene_ID))
+  )
+
+upset_data <- upset_data %>%
+  mutate(across(c(EP, EP_BW, EP_ME), as.integer))
+
+upset(upset_data[, c("EP", "EP_BW", "EP_ME")], sets = c("EP", "EP_BW", "EP_ME"))
+
+# Make sure the data frame is clean and logical
+upset_data <- data.frame(
+  Gene_ID = unique(c(
+    LP_ISO_O2$Gene_ID,
+    LP_ISO_BW$Gene_ID,
+    LP_ISO_ME$Gene_ID
+  ))
+) %>%
+  mutate(
+    LP = Gene_ID %in% (LP_ISO_O2 %>% filter(O2_SIG == "SIG") %>% pull(Gene_ID)),
+    LP_BW = Gene_ID %in% (LP_ISO_BW %>% filter(BW_O2_SIG == "SIG") %>% pull(Gene_ID)),
+    LP_ME = Gene_ID %in% (LP_ISO_ME %>% filter(ME_O2_SIG == "SIG") %>% pull(Gene_ID))
+  )
+
+upset_data <- upset_data %>%
+  mutate(across(c(LP, LP_BW, LP_ME), as.integer))
+
+upset(upset_data[, c("LP", "LP_BW", "LP_ME")], sets = c("LP", "LP_BW", "LP_ME"))

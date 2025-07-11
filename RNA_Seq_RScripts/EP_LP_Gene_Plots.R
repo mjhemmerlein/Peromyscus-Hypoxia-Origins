@@ -1,33 +1,32 @@
 
 # Packages
-library('BiocParallel')
-library('dplyr')
-library('ggplot2')
-library('lme4')
-library('readxl')
-library('variancePartition')
-library('edgeR')
+library(BiocParallel)
+library(dplyr)
+library(ggplot2)
+library(lme4)
+library(readxl)
+library(variancePartition)
+library(edgeR)
+library(Matrix)
 library(forcats)
 
-# Early Pregnancy -----
-EP_Sample_Info <- read_xlsx("RNA_Seq_RawData/MetaData_EP.xlsx")
-EP_Sample_Info = as.data.frame(EP_Sample_Info)
-rownames(EP_Sample_Info) = EP_Sample_Info$Sample_ID
-EP_Sample_Info = EP_Sample_Info %>% filter(Strain == "BW" | Strain == "ME")
+# Early Pregnancy  ------------------
+Sample_Info <- read_xlsx("RNA_Seq_RawData/MetaData_EP.xlsx")
+Sample_Info = as.data.frame(Sample_Info)
+rownames(Sample_Info) = Sample_Info$Sample_ID
+Sample_Info = Sample_Info %>% filter(Strain == "BW" | Strain == "ME")
 
 # Read in Files + QC
-Pman_rawreads <- read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
-Pman_rawreads = na.omit(Pman_rawreads, col = "Geneid") # 1 NA
-Pman_rawreads <- `row.names<-`(Pman_rawreads, Pman_rawreads$Geneid)
+Pman_rawreads = `row.names<-`(Pman_rawreads, Pman_rawreads$Geneid)
 Pman_rawreads <- Pman_rawreads[,-c(1:6)]
 
 # Check read table vs sample info
-Check = EP_Sample_Info$Seq_Name
+Check = Sample_Info$Seq_Name
 colnames(Pman_rawreads) == Check
 
-colnames(Pman_rawreads) = rownames(EP_Sample_Info)
-
+colnames(Pman_rawreads) = rownames(Sample_Info)
 Pman_readcounts <- as.matrix(Pman_rawreads)
 dPman_0 <- DGEList(Pman_readcounts)
 
@@ -36,24 +35,25 @@ dim(dPman_0)
 keep <- rowSums(cpm(dPman_0) > 0.5 ) >= 60
 dPman <- dPman_0[keep,]
 dim(dPman)
-plotMDS(dPman, col = as.numeric(EP_Sample_Info$Strain), labels = EP_Sample_Info$Strain)
+plotMDS(dPman, col = as.numeric(Sample_Info$Strain), labels = Sample_Info$Strain)
 
-rownames(EP_Sample_Info) == colnames(dPman)
+rownames(Sample_Info) == colnames(dPman)
 
 # Interaction
 param = SnowParam(8, "SOCK", progressbar=TRUE)
 form <- ~ Strain*O2 + (1|Mom)
-EP_vobjdream = voomWithDreamWeights(dPman, form, EP_Sample_Info, BPPARAM=param, plot = T)
-fitmm = dream( EP_vobjdream, form, EP_Sample_Info, ddf = "Kenward-Roger")
+EP_vobjDream = voomWithDreamWeights(dPman, form, Sample_Info, BPPARAM=param, plot = T)
+fitmm = dream( EP_vobjDream, form, Sample_Info, ddf = "Kenward-Roger")
 fitmm = eBayes(fitmm)
 
 DE_strain <- topTable( fitmm, coef='StrainME', sort.by = "P", n = Inf, )
 DE_o2 <- topTable( fitmm, coef='O22H', sort.by = "P", n = Inf)
 DE_ixn <- topTable( fitmm, coef='StrainME:O22H', sort.by = "P", n = Inf)
 
+length(DE_ixn$logFC[which(DE_ixn$adj.P.Val < 0.05)])
 length(DE_strain$logFC[which(DE_strain$adj.P.Val < 0.05)])
 length(DE_o2$logFC[which(DE_o2$adj.P.Val < 0.05)])
-length(DE_ixn$logFC[which(DE_ixn$adj.P.Val < 0.05)])
+
 
 
 # Late Pregnancy ------------
@@ -65,10 +65,8 @@ Sample_Info = Sample_Info %>% filter(Strain == "BW" | Strain == "ME")
 Sample_Info = Sample_Info[-which(rownames(Sample_Info) == "LZ089"),]
 
 # Read in Files + QC
-Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts.xlsx")
+Pman_rawreads = read_xlsx("RNA_Seq_RawData/LP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 Pman_rawreads = as.data.frame(Pman_rawreads)
-Pman_rawreads = Pman_rawreads %>%
-  filter(!is.na(Geneid))
 Pman_rawreads = `row.names<-`(Pman_rawreads, Pman_rawreads$Geneid)
 Pman_rawreads <- Pman_rawreads[,-c(1:6)]
 Pman_rawreads <- subset(Pman_rawreads, select = -c(RNA201216ZC_LZ089_S16_L001_fastp_pman_Halign_liberal.bam))
@@ -94,18 +92,17 @@ rownames(Sample_Info) == colnames(dPman)
 # Interaction
 param = SnowParam(8, "SOCK", progressbar=TRUE)
 form <- ~ Strain*O2 + (1|Mom)
-LP_vobjDream = voomWithDreamWeights(dPman, form, LP_Sample_Info, BPPARAM=param, plot = T)
-fitmm = dream( LP_vobjDream, form, LP_Sample_Info, ddf = "Kenward-Roger")
+LP_vobjDream = voomWithDreamWeights(dPman, form, Sample_Info, BPPARAM=param, plot = T)
+fitmm = dream( LP_vobjDream, form, Sample_Info, ddf = "Kenward-Roger")
 fitmm = eBayes(fitmm)
 
 DE_strain <- topTable( fitmm, coef='StrainME', sort.by = "P", n = Inf, )
 DE_o2 <- topTable( fitmm, coef='O22H', sort.by = "P", n = Inf)
 DE_ixn <- topTable( fitmm, coef='StrainME:O22H', sort.by = "P", n = Inf)
 
+length(DE_ixn$logFC[which(DE_ixn$adj.P.Val < 0.05)])
 length(DE_strain$logFC[which(DE_strain$adj.P.Val < 0.05)])
 length(DE_o2$logFC[which(DE_o2$adj.P.Val < 0.05)])
-length(DE_ixn$logFC[which(DE_ixn$adj.P.Val < 0.05)])
-
 
 
 
@@ -207,6 +204,17 @@ save_faceted_plot <- function(gene_id, gene_name = NULL,
 
 # Viewing:
 
+# Interaction Genes
+plot_gene_expression_faceted("Etfa", "Etfa", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Etfb", "Etfb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+# BW Genes
+plot_gene_expression_faceted("Hacl1", "Hacl1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+
+
+
+
 # Glucose transporters
 plot_gene_expression_faceted("Slc2a1", "Slc2a1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Slc1a2", "Slc1a2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
@@ -229,6 +237,8 @@ plot_gene_expression_faceted("Sec22a", "Sec22a", EP_vobjdream, LP_vobjDream, EP_
 
 
 # Glycolysis
+
+plot_gene_expression_faceted("Hk1", "Hk1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
 plot_gene_expression_faceted("Gpi", "Gpi", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
@@ -283,13 +293,14 @@ plot_gene_expression_faceted("Rab18", "Rab18", EP_vobjdream, LP_vobjDream, EP_Sa
 plot_gene_expression_faceted("Slc16a3", "Slc16a3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Creb3l4", "Creb3l4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
+plot_gene_expression_faceted("LOC102909279", "Nat8f5", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Aptx", "Aptx", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
 
 
 # Mito genes
 
-plot_gene_expression_faceted("Etfa", "Etfa", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
-plot_gene_expression_faceted("Etfb", "Etfb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
 plot_gene_expression_faceted("Etfdh", "Etfdh", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Acacb", "Acacb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Ehhadh", "Ehhadh", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
