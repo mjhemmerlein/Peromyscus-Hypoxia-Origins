@@ -108,7 +108,7 @@ plot(sftBW$fitIndices[,1],
      -sign(sftBW$fitIndices[,3]) * sftBW$fitIndices[,2],
      xlab="Soft Threshold (power)",
      ylab="Scale Free Topology Model Fit,signed R^2",type="n",
-     main = paste("Scale indLPendence"));
+     main = paste("Scale independence"));
 text(sftBW$fitIndices[,1], -sign(sftBW$fitIndices[,3])*sftBW$fitIndices[,2],
      labels=powers,cex=cex1,col="red");
 
@@ -126,85 +126,85 @@ text(sftBW$fitIndices[,1], sftBW$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 
+# POWER = 4
+NetBWLP = blockwiseModules(ExprData_BWLP, 
+                           power = 4, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPBWExprTOM",
+                           verbose = 3)
+
+load("LP_WGCNA_Output_Test/LPBWExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPBWExprTOM-block.2.RData")
+table(NetBWLP$colors)
+moduleLabelsBWLP = NetBWLP$colors
+moduleColorsBWLP = labels2colors(NetBWLP$colors)
+
+MEsBW_LP = NetBWLP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+geneTreeBWLP = NetBWLP$dendrograms[[1]]
+table(moduleColorsBWLP)
+dim(table(moduleColorsBWLP))
+
+# POWER = 6
+NetBWLP = blockwiseModules(ExprData_BWLP, 
+                           power = 6, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPBWExprTOM",
+                           verbose = 3)
+
+load("LP_WGCNA_Output_Test/LPBWExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPBWExprTOM-block.2.RData")
+table(NetBWLP$colors)
+moduleLabelsBWLP = NetBWLP$colors
+moduleColorsBWLP = labels2colors(NetBWLP$colors)
+
+MEsBW_LP = NetBWLP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+geneTreeBWLP = NetBWLP$dendrograms[[1]]
+table(moduleColorsBWLP)
+dim(table(moduleColorsBWLP))
+
+# POWER = 7
+NetBWLP = blockwiseModules(ExprData_BWLP, 
+                           power = 7, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPBWExprTOM",
+                           verbose = 3)
+
+load("LP_WGCNA_Output_Test/LPBWExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPBWExprTOM-block.2.RData")
+table(NetBWLP$colors)
+moduleLabelsBWLP = NetBWLP$colors
+moduleColorsBWLP = labels2colors(NetBWLP$colors)
+
+MEsBW_LP = NetBWLP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+geneTreeBWLP = NetBWLP$dendrograms[[1]]
+table(moduleColorsBWLP)
+dim(table(moduleColorsBWLP))
+
+
 # POWER = 8
 NetBWLP = blockwiseModules(ExprData_BWLP, 
                            power = 8, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPBWExprTOM",
-                           verbose = 3)
-
-load("LP_WGCNA_Output_Test/LPBWExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPBWExprTOM-block.2.RData")
-table(NetBWLP$colors)
-moduleLabelsBWLP = NetBWLP$colors
-moduleColorsBWLP = labels2colors(NetBWLP$colors)
-
-MEsBW_LP = NetBWLP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-geneTreeBWLP = NetBWLP$dendrograms[[1]]
-table(moduleColorsBWLP)
-dim(table(moduleColorsBWLP))
-
-# POWER = 12
-NetBWLP = blockwiseModules(ExprData_BWLP, 
-                           power = 12, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPBWExprTOM",
-                           verbose = 3)
-
-load("LP_WGCNA_Output_Test/LPBWExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPBWExprTOM-block.2.RData")
-table(NetBWLP$colors)
-moduleLabelsBWLP = NetBWLP$colors
-moduleColorsBWLP = labels2colors(NetBWLP$colors)
-
-MEsBW_LP = NetBWLP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-geneTreeBWLP = NetBWLP$dendrograms[[1]]
-table(moduleColorsBWLP)
-dim(table(moduleColorsBWLP))
-
-# POWER = 14
-NetBWLP = blockwiseModules(ExprData_BWLP, 
-                           power = 14, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPBWExprTOM",
-                           verbose = 3)
-
-load("LP_WGCNA_Output_Test/LPBWExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPBWExprTOM-block.2.RData")
-table(NetBWLP$colors)
-moduleLabelsBWLP = NetBWLP$colors
-moduleColorsBWLP = labels2colors(NetBWLP$colors)
-
-MEsBW_LP = NetBWLP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-geneTreeBWLP = NetBWLP$dendrograms[[1]]
-table(moduleColorsBWLP)
-dim(table(moduleColorsBWLP))
-
-
-# POWER = 20
-NetBWLP = blockwiseModules(ExprData_BWLP, 
-                           power = 20, 
                            maxBlockSize = 14000,
                            TOMType = "signed", networkType = "signed hybrid",
                            minModuleSize = 30,
@@ -253,7 +253,7 @@ cex1 = 0.9;
 # Scale-free topology fit index as a function of the soft-thresholding power
 plot(sftME$fitIndices[,1], -sign(sftME$fitIndices[,3])*sftME$fitIndices[,2],
      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
-     main = paste("Scale indLPendence"));
+     main = paste("Scale independence"));
 text(sftME$fitIndices[,1], -sign(sftME$fitIndices[,3])*sftME$fitIndices[,2],
      labels=powers,cex=cex1,col="red");
 
@@ -268,87 +268,87 @@ text(sftME$fitIndices[,1], sftME$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 
+# POWER = 4
+NetMELP = blockwiseModules(ExprData_MELP, 
+                           power = 4, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", 
+                           networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPMEExprTOM",
+                           verbose = 3)
+
+load("LP_WGCNA_Output_Test/LPMEExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPMEExprTOM-block.2.RData")
+table(NetMELP$colors)
+moduleLabelsMELP = NetMELP$colors
+moduleColorsMELP = labels2colors(NetMELP$colors)
+MEsMELP = NetMELP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+
+geneTreeMELP = NetMELP$dendrograms[[1]]
+table(moduleColorsMELP)
+dim(table(moduleColorsMELP))
+
+# POWER = 6
+NetMELP = blockwiseModules(ExprData_MELP, 
+                           power = 6, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", 
+                           networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPMEExprTOM",
+                           verbose = 3)
+
+load("LP_WGCNA_Output_Test/LPMEExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPMEExprTOM-block.2.RData")
+table(NetMELP$colors)
+moduleLabelsMELP = NetMELP$colors
+moduleColorsMELP = labels2colors(NetMELP$colors)
+MEsMELP = NetMELP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+
+geneTreeMELP = NetMELP$dendrograms[[1]]
+table(moduleColorsMELP)
+dim(table(moduleColorsMELP))
+
+# POWER = 7
+NetMELP = blockwiseModules(ExprData_MELP, 
+                           power = 7, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", 
+                           networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPMEExprTOM",
+                           verbose = 3)
+
+load("LP_WGCNA_Output_Test/LPMEExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPMEExprTOM-block.2.RData")
+table(NetMELP$colors)
+moduleLabelsMELP = NetMELP$colors
+moduleColorsMELP = labels2colors(NetMELP$colors)
+MEsMELP = NetMELP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+
+geneTreeMELP = NetMELP$dendrograms[[1]]
+table(moduleColorsMELP)
+dim(table(moduleColorsMELP))
+
 # POWER = 8
 NetMELP = blockwiseModules(ExprData_MELP, 
                            power = 8, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", 
-                           networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPMEExprTOM",
-                           verbose = 3)
-
-load("LP_WGCNA_Output_Test/LPMEExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPMEExprTOM-block.2.RData")
-table(NetMELP$colors)
-moduleLabelsMELP = NetMELP$colors
-moduleColorsMELP = labels2colors(NetMELP$colors)
-MEsMELP = NetMELP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-
-geneTreeMELP = NetMELP$dendrograms[[1]]
-table(moduleColorsMELP)
-dim(table(moduleColorsMELP))
-
-# POWER = 12
-NetMELP = blockwiseModules(ExprData_MELP, 
-                           power = 12, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", 
-                           networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPMEExprTOM",
-                           verbose = 3)
-
-load("LP_WGCNA_Output_Test/LPMEExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPMEExprTOM-block.2.RData")
-table(NetMELP$colors)
-moduleLabelsMELP = NetMELP$colors
-moduleColorsMELP = labels2colors(NetMELP$colors)
-MEsMELP = NetMELP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-
-geneTreeMELP = NetMELP$dendrograms[[1]]
-table(moduleColorsMELP)
-dim(table(moduleColorsMELP))
-
-# POWER = 14
-NetMELP = blockwiseModules(ExprData_MELP, 
-                           power = 14, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", 
-                           networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "LP_WGCNA_Output_Test/LPMEExprTOM",
-                           verbose = 3)
-
-load("LP_WGCNA_Output_Test/LPMEExprTOM-block.1.RData"); load("LP_WGCNA_Output_Test/LPMEExprTOM-block.2.RData")
-table(NetMELP$colors)
-moduleLabelsMELP = NetMELP$colors
-moduleColorsMELP = labels2colors(NetMELP$colors)
-MEsMELP = NetMELP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-
-geneTreeMELP = NetMELP$dendrograms[[1]]
-table(moduleColorsMELP)
-dim(table(moduleColorsMELP))
-
-# POWER = 20
-NetMELP = blockwiseModules(ExprData_MELP, 
-                           power = 20, 
                            maxBlockSize = 14000,
                            TOMType = "signed", 
                            networkType = "signed hybrid",
