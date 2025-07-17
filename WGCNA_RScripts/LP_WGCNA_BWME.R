@@ -126,7 +126,7 @@ text(sftBW$fitIndices[,1], sftBW$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 
-# POWER = 4
+# POWER = 7
 NetBWLP = blockwiseModules(ExprData_BWLP, 
                            power = 7, 
                            maxBlockSize = 14000,
@@ -259,7 +259,7 @@ text(sftME$fitIndices[,1], sftME$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 
-# POWER = 4
+# POWER = 7
 NetMELP = blockwiseModules(ExprData_MELP, 
                            power = 7, 
                            maxBlockSize = 14000,
