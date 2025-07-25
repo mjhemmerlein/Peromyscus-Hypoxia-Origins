@@ -6,56 +6,62 @@ library(lme4)
 library(lmerTest)
 library(readxl)
 library(ggplot2)
+library(gprofiler2)
 
-gene_infoBWEP = read.csv("EP_WGCNA_Output/EP_BW_Modules.csv")
+EP_ISO_Summary = read_xlsx("RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx")
 
-
-# GO Analysis for BW modules ####
-
-musGeneinfo = read_xlsx("RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx")
-
-## Match and add gene names from Mus from Kates musGeneInfo
-## Filter genes from module colors that are in musGeneInfo
-
-# Module colors
-colors <- c("green", "pink", "red", "magenta", "blue", "brown", "purple", "black", "turquoise", "tan", "greenyellow", "yellow")
+# Define the function
+run_gost_analysis <- function(gene_list, background, organism = "mmusculus") {
+  gost_results <- gost(
+    gene_list, 
+    organism = organism,
+    custom_bg = background,
+    ordered_query = FALSE,
+    correction_method = "fdr",
+    evcodes = TRUE
+  )
   
-# Loop through each color
-  for (color in colors) {
-    print(paste("Processing color:", color))
-    
-
-colorME <- gene_infoBWEP %>% filter(moduleColor == color)
-colorME <- as.data.frame(colorME)
-colorME <- colorME[, 1:2]
-rownames(colorME) <- colorME$Gene
-intersection2 <- musGeneinfo$Pman_GeneID %in% rownames(colorME)
-colorME0 <- musGeneinfo[which(intersection2), ] 
-colorMEGO <- as.vector(colorME0$Pman_GeneID)
-    
-colorGO <- gost(colorMEGO,
-                organism = "mmusculus",
-                user_threshold = 0.05,
-                custom_bg = background,
-                ordered_query = TRUE,
-                correction_method = "fdr")
-    
-# Create results dataframe
-colorGOResults <- data.frame(
-  Cluster = colorGO$result$query,
-  Term.ID = colorGO$result$term_id,
-  Term.Name = colorGO$result$term_name,
-  geneid = colorGO$result$intersection,
-  P.value = colorGO$result$p_value,
-  Source = colorGO$result$source,
-  Term.Size = colorGO$result$term_size,
-  Precision = colorGO$result$precision,
-  intersection_size = colorGO$result$intersection_size,
-  query_size = colorGO$result$query_size,
-  Gene_ratio = as.numeric((colorGO$result$intersection_size/colorGO$result$query_size)))
-    
-# Save to CSV
-    filename <- paste0("EP_WGCNA_Output/GO_Results/", color, "_GO_results.csv")
-    write.csv(colorGOResults, filename, row.names = FALSE)
-    print(paste("Saved", nrow(colorGOResults), "GO terms to", filename))
+  if (is.null(gost_results)) {
+    return(NULL)
   }
+  
+  data.frame(
+    Cluster = gost_results$result$query,
+    Term.ID = gost_results$result$term_id,
+    Term.Name = gost_results$result$term_name,
+    geneid = gost_results$result$intersection,
+    P.value = gost_results$result$p_value,
+    Source = gost_results$result$source,
+    Term.Size = gost_results$result$term_size,
+    Precision = gost_results$result$precision,
+    intersection_size = gost_results$result$intersection_size,
+    query_size = gost_results$result$query_size,
+    Gene_ratio = gost_results$result$intersection_size / gost_results$result$query_size
+  )
+}
+
+# Background gene list
+background <- EP_ISO_Summary$Mus_GeneID
+
+# Unique module colors
+colors <- unique(EP_ISO_Summary$EP_BW_Modules)
+
+# Loop over module colors
+for (col in colors) {
+  gene_list <- EP_ISO_Summary %>%
+    filter(EP_BW_Modules == col) %>%
+    pull(Mus_GeneID)
+  
+  go_result <- run_gost_analysis(gene_list, background)
+  
+  if (!is.null(go_result)) {
+    write.csv(go_result, paste0("EP_WGCNA_Output/GO_Results/", col, ".csv"), row.names = FALSE)
+  }
+}
+
+
+
+
+
+
+
