@@ -7,3 +7,6 @@ EP_WGCNA_Output/*.RData
 Plots/
 EP_WGCNA_Output/*.csv
 EP_WGCNA_Output/GO_Results/
+RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx
+RNA_Seq_Output/LP_ISO_Ortho_Summary.xlsx
+RNA_Seq_Output/EP_LP_SharedStrain.csv

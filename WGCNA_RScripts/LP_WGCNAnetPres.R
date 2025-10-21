@@ -241,3 +241,30 @@ abline(h=0); abline(h=2, col = "blue", lty = 2); abline(h=10, col = "red", lty =
 
 #### Add Zsummary scores to BWtables (i.e., preservation stats for highlanders)
 BWpreservedStatsLP = print(signif(statsZLP[, "Zsummary.pres", drop = FALSE],2))
+
+
+##### Generate summary table 
+
+LP_BW_Hypoxia = read.csv("LP_WGCNA_Output/LP_BW_Module_Trait_ModelSummary.csv")
+LP_BW_Hypoxia = LP_BW_Hypoxia %>%
+  select(-X) %>%
+  rename(ModuleColor = moduleColor)
+
+LP_BW_PreservedStats <- as.data.frame(signif(statsZLP[, "Zsummary.pres", drop = FALSE], 2))
+
+LP_BW_PreservedStats  <- LP_BW_PreservedStats  %>%
+  mutate(ModuleColor = rownames(.)) %>%
+  filter(ModuleColor != "gold") %>%
+  filter(ModuleColor != "grey")
+
+# Create a data frame of module sizes
+moduleSizesBWLP <- as.data.frame(table(moduleColorsBWLP))
+
+# Rename columns for clarity
+colnames(moduleSizesBWLP) <- c("ModuleColor", "ModuleSize")
+
+LP_BW_Summary <- LP_BW_Hypoxia  %>%
+  left_join(LP_BW_PreservedStats, by = "ModuleColor")
+
+
+# write.csv(LP_BW_Summary, "LP_WGCNA_Output/LP_BW_Summary.csv")

@@ -20,7 +20,7 @@ EP <- read_xlsx("Placental_Histology/EP BW_ME Quantification.xlsx") %>%
          Imp_Uniq = paste0(Mom,"_",Imp_Number),
          Imp_Uniq = as.factor(Imp_Uniq))
 
-# JZ and Progenitor area ------
+# LZ and Progenitor area ------
 
 # Variables to analyze
 vars <- c("LZ_Area", "Prog_Sum")
@@ -36,7 +36,7 @@ model_results <- vars %>%
       ANOVA = list(anova(fit) %>% broom::tidy()),
       Fixed_Effects = list(as.data.frame(coef(summary(fit)))),
       Random_Effects = list(as.data.frame(VarCorr(fit))),
-      Emmeans = list(emmeans(fit, ~ Pop*O2) %>% pairs() %>% as.data.frame())
+      Emmeans = list(emmeans(fit, ~ Pop*O2) %>% pairs(adjust = "tukey") %>% as.data.frame())
     )
   })
 
@@ -88,7 +88,7 @@ model_results <- vars %>%
       ANOVA = list(anova(fit) %>% broom::tidy()),
       Fixed_Effects = list(as.data.frame(coef(summary(fit)))),
       Random_Effects = list(as.data.frame(VarCorr(fit))),
-      Emmeans = list(emmeans(fit, ~ Pop*O2) %>% pairs() %>% as.data.frame())
+      Emmeans = list(emmeans(fit, ~ Pop*O2) %>% pairs(adjust = "tukey") %>% as.data.frame())
     )
   })
 
@@ -109,6 +109,50 @@ Fixresults = model_results %>%
 # Check Type III
 
 Prog_LZ = lmer(Prog_Sum ~ Pop*O2 + LZ_Area + (1|Imp_Uniq), data = EP)
+anova(Prog_LZ)
+summary(Prog_LZ)
+
+plot(resid(Prog_LZ))
+qqnorm(resid(Prog_LZ));qqline(resid(Prog_LZ))
+
+
+# Progenitor divided by LZ -------
+
+# Variables to analyze
+vars <- c("Prog_LZ")
+
+model_results <- vars %>%
+  map_df(~{
+    formula <- as.formula(paste(.x, "~ Pop*O2 + (1|Imp_Uniq)"))
+    fit <- lmer(formula, data = EP)
+    summ <- summary(fit)
+    
+    tibble(
+      Variable = .x,
+      ANOVA = list(anova(fit) %>% broom::tidy()),
+      Fixed_Effects = list(as.data.frame(coef(summary(fit)))),
+      Random_Effects = list(as.data.frame(VarCorr(fit))),
+      Emmeans = list(emmeans(fit, ~ Pop*O2) %>% pairs(adjust = "tukey") %>% as.data.frame())
+    )
+  })
+
+
+# View ANOVA results as tidy table
+ANOVAresults = model_results %>%
+  select(Variable, ANOVA) %>%
+  unnest(ANOVA)
+
+EMresults = model_results %>%
+  select(Variable, Emmeans) %>%
+  unnest(Emmeans)
+
+Fixresults = model_results %>%
+  select(Variable, Fixed_Effects) %>%
+  unnest(Fixed_Effects)
+
+# Check Type III
+
+Prog_LZ = lmer(Prog_LZ ~ Pop*O2 + (1|Imp_Uniq), data = EP)
 anova(Prog_LZ)
 summary(Prog_LZ)
 

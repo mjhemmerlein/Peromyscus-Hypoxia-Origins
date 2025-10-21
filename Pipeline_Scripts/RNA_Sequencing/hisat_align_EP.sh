@@ -14,8 +14,8 @@ hisat2 -p 24 -q --mp 2,0 \
 -x ../../01_input/pman \
 --summary-file ../reports/${name}.txt \
 -1 ${name}_1_fastp.1.fastq.gz \
--2 ${name}_1_fastp.1.fastq.gz | \
-samtools view -Sbo ../hisat2_align/${name}_fastp_pman_Halign_liberal.bam
+-2 ${name}_2_fastp.2.fastq.gz | \
+samtools view -Sbo ../hisat2_align_paired/${name}_fastp_pman_Halign_liberal.bam
 
 done
 
