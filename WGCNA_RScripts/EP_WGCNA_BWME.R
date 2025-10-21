@@ -6,6 +6,7 @@ library(lme4)
 library(lmerTest)
 library(readxl)
 library(ggplot2)
+library(stringr)
 
 # Read in sample info
 Traits = read_xlsx("RNA_Seq_RawData/MetaData_EP.xlsx")
@@ -195,14 +196,27 @@ for (p in all_modules) {
 
 summaryBWEP02$Pvalue.O2corr <- p.adjust(summaryBWEP02$Pvalue.O2, method = 'BH')
 
-# write.csv(summaryBWEP02, "EP_WGCNA_Output/EP_BW_Module_Trait_ModelSummary.csv")
-
 # Create a dataset containing all gene-specific information
 genes=names(ExprData_BWEP)
 geneInfoBWEP = data.frame(Gene = genes,
                           moduleColor = moduleColorsBWEP)
 
 # write.csv(geneInfoBWEP, "EP_WGCNA_Output/EP_BW_Modules.csv")
+
+
+# Summary of BW WGCNA
+summaryBWEP02 <- summaryBWEP02 %>%
+  mutate(moduleColor = str_remove(Module, "^ME")) %>%  
+  select(-Module) %>%                                  
+  left_join(                                           
+    geneInfoBWEP %>%
+      count(moduleColor, name = "ModuleSize"),
+    by = "moduleColor"
+  ) %>%
+  relocate(moduleColor, ModuleSize)                    
+
+# write.csv(summaryBWEP02, "EP_WGCNA_Output/EP_BW_Module_Trait_ModelSummary.csv")
+
 
 ## Plot eigenes against hypoxia/normoxia in BW animals ####
 ModuleME_Info_BWEP$hypoxia = TraitsBW_EP$O2
@@ -332,9 +346,29 @@ for (p in all_modules) {
 
 summaryMEEP02$Pvalue.O2corr <- p.adjust(summaryMEEP02$Pvalue.O2, method = 'BH')
 
+
+# Create a dataset containing all gene-specific information
+genes=names(ExprData_MEEP)
+geneInfoMEEP = data.frame(Gene = genes,
+                          moduleColor = moduleColorsMEEP)
+
+# write.csv(geneInfoBWEP, "EP_WGCNA_Output/EP_BW_Modules.csv")
+
+# Summary of ME WGCNA
+summaryMEEP02 <- summaryMEEP02 %>%
+  mutate(moduleColor = str_remove(Module, "^ME")) %>%  
+  select(-Module) %>%                                  
+  left_join(                                           
+    geneInfoMEEP %>%
+      count(moduleColor, name = "ModuleSize"),
+    by = "moduleColor"
+  ) %>%
+  relocate(moduleColor, ModuleSize)                    
+
 # write.csv(summaryMEEP02, "EP_WGCNA_Output/EP_ME_Module_Trait_ModelSummary.csv")
 
 # Create a dataset containing all gene-specific information
 genes=names(ExprData_MEEP)
 geneInfoMEEP = data.frame(Gene = genes,
                           moduleColor = moduleColorsMEEP)
+

@@ -161,11 +161,11 @@ plot_gene_expression_faceted <- function(gene_id, gene_name = NULL,
   
   # Create the faceted plot
   ggplot(combined_data, aes(x = Group, y = Expression, fill = Strain)) +
-    geom_boxplot(outlier.shape = NA) +
-    geom_jitter(width = 0.1, color = "black", size = 3.5, alpha = 0.5) +
+      geom_boxplot(outlier.shape = NA) +
+  geom_jitter(size = 3.5, alpha = 0.5, width = 0.1, stroke = 0) +
+  scale_fill_manual(values = c("#F4C552", "#247BB1")) +
+  theme_classic() +
     facet_grid(. ~ Stage) +
-    theme_bw() +
-    scale_fill_manual(values = c("goldenrod1", "skyblue")) +
     labs(
       x = NULL,
       y = paste(gene_name, "\nNormalized Transcript\nAbundance")) +
@@ -184,7 +184,7 @@ plot_gene_expression_faceted <- function(gene_id, gene_name = NULL,
 save_faceted_plot <- function(gene_id, gene_name = NULL,
                               EP_vobjdream, LP_vobjDream,
                               EP_Sample_Info, LP_Sample_Info,
-                              output_dir = "Dream_Output/Faceted_Gene_Plots/") {
+                              output_dir = "Plots/Faceted_Gene_Plots/") {
   
   plot <- plot_gene_expression_faceted(gene_id, gene_name,
                                        EP_vobjdream, LP_vobjDream,
@@ -192,9 +192,9 @@ save_faceted_plot <- function(gene_id, gene_name = NULL,
   
   # Generate filename
   filename <- if (is.null(gene_name)) {
-    paste0(output_dir, gene_id, "_faceted.png")
+    paste0(output_dir, gene_id, "_faceted.pdf")
   } else {
-    paste0(output_dir, gene_name, "_faceted.png")
+    paste0(output_dir, gene_name, "_faceted.pdf")
   }
   
   # Save the plot
@@ -207,6 +207,49 @@ save_faceted_plot <- function(gene_id, gene_name = NULL,
 # Interaction Genes
 plot_gene_expression_faceted("Etfa", "Etfa", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Etfb", "Etfb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Hlcs", "Hlcs", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Hsd17b12", "Hsd17b12", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa4", "Ndufa4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs4", "Ndufs4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Hadha", "Hadha", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+plot_gene_expression_faceted("Atp5pb", "Atp5pb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6v1e1", "Atp6v1e1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6v1f", "Atp6v1f", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6v0b", "Atp6v0b", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6v0c", "Atp6v0c", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6v1c1", "Atp6v1c1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6v1g1", "Atp6v1g1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6v1d", "Atp6v1d", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp6ap1", "Atp6ap1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+
+
+plot_gene_expression_faceted("Ndufa1", "Ndufa1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa3", "Ndufa3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa4", "Ndufa4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa5", "Ndufa5", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa6", "Ndufa6", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa8", "Ndufa8", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa9", "Ndufa9", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufab1", "Ndufab1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufb2", "Ndufb2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufb3", "Ndufb3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufb4", "Ndufb4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufb7", "Ndufb7", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufb8", "Ndufb8", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufc1", "Ndufc1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufc2", "Ndufc2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs1", "Ndufs1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs2", "Ndufs2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs3", "Ndufs3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs4", "Ndufs4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs6", "Ndufs6", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs7", "Ndufs7", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufs8", "Ndufs8", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufv1", "Ndufv1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+
 
 # BW Genes
 plot_gene_expression_faceted("Hacl1", "Hacl1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
@@ -229,10 +272,16 @@ plot_gene_expression_faceted("P2rx1", "P2rx1", EP_vobjdream, LP_vobjDream, EP_Sa
 plot_gene_expression_faceted("Clcn2", "Clcn2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Trpm6", "Trpm6", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Tmem150c", "Tmem150c", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Tmem100", "Tmem100", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Hey2", "Hey2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Daam2", "Daam2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
 # ER transport
 plot_gene_expression_faceted("Sec22a", "Sec22a", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp2a3", "Atp2a3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp2b3", "Atp2b3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Atp2c2", "Atp2c2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
 
 
 
@@ -295,7 +344,50 @@ plot_gene_expression_faceted("Creb3l4", "Creb3l4", EP_vobjdream, LP_vobjDream, E
 
 plot_gene_expression_faceted("LOC102909279", "Nat8f5", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Aptx", "Aptx", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Tmem61", "Tmem61", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Jagn1", "Jagn1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Smndc1", "Smndc1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Echdc1", "Echdc1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Adam22", "Adam22", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Pappa2", "Pappa2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Bivm", "Bivn", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
+plot_gene_expression_faceted("LOC102923527", "Ctsq", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("LOC102923211", "Ctsj", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("LOC102923832", "Ctsq", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("LOC121826591", "HBB", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("LOC102905910", "Tpbpa", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+
+# GSEA HYPOXIA Combined Genes
+# Positive rank
+plot_gene_expression_faceted("Strc", "Strc", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ripply3", "Ripply3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Stk31", "Stk31", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Hmcn2", "Hmcn2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+# Negative rank
+plot_gene_expression_faceted("Hacl1", "Hacl1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ppp1ca", "Ppp1ca", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ykt6", "Ykt6", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Kin", "Kin", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+plot_gene_expression_faceted("Chrdl1", "Chrdl1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Pi15", "Pi15", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Akr7a3", "Akr7a3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+
+plot_gene_expression_faceted("Hand1", "Hand1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Tfeb", "Tfeb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Colec12", "Colec12", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+# Collagen epithelium
+plot_gene_expression_faceted("Tnc", "Tnc", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Loxl2", "Loxl2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Hmcn1", "Hmcn1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Col6a3", "Col6a3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Gpc4", "Gpc4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Vwf", "Vwf", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Fbn2", "Fbn2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
 
 # Mito genes
@@ -311,13 +403,72 @@ plot_gene_expression_faceted("Acly", "Acly", EP_vobjdream, LP_vobjDream, EP_Samp
 plot_gene_expression_faceted("Ampd2", "Ampd2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Gpd1", "Gpd1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 plot_gene_expression_faceted("Ucp2", "Ucp2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Hadhb", "Hadhb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Bcl2", "Bacl2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufaf2", "Ndufaf2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
+
+# Transporters (EP O2 UP)
+plot_gene_expression_faceted("Cacna1s", "Cacna1s", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("P2rx1", "P2rx1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Scn4b", "Scn4b", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Clcn2", "Clcn2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Trpm6", "Trpm6", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Kcnj13", "Kcnj13", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Aqp3", "Aqp3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Gjb2", "Gjb2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Kcng1", "Kcng1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Kcnc4", "Kcnc4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Slc22a3", "Slc22a3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Slc6a13", "Slc6a13", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Slc34a2", "Slc34a2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+
+# ER Transport (EP O2 DOWN)
+plot_gene_expression_faceted("Tmed7", "Tmed7", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Arf4", "Arf4", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Tmed10", "Tmed10", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Rab1a", "Rab1a", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("M6pr", "M6pr", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Rab18", "Rab18", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ykt6", "Ykt6", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Vps45", "Vps45", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Dctn5", "Dctn5", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Arf1", "Arf1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Napa", "Napa", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Copz1", "Copz1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Sys1", "Sys1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Sec22a", "Sec22a", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ppp6c", "Ppp6c", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Trappc3", "Trappc3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+# IXN UP
+plot_gene_expression_faceted("Ilk", "Ilk", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Creb3", "Creb3", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Rps6kb2", "Rps6kb2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ppp2r2d", "Ppp2r2d", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ppp1ca", "Ppp1ca", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+plot_gene_expression_faceted("Prkaa1", "Prkaa1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+plot_gene_expression_faceted("Mtfmt", "Mtfmt", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Tmem223", "Tmem223", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Oxnad1", "Oxnad1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Micos10", "Micos10", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ndufa9", "Ndufa9", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Ykt6", "Ykt6", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Etfa", "Etfa", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Pmpcb", "Pmpcb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Rnf5", "Rnf5", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+plot_gene_expression_faceted("Eci1", "Eci1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+
+plot_gene_expression_faceted("Piezo1", "Piezo1", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
 # For saving:
- save_faceted_plot("Etfa", "Etfa", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
- save_faceted_plot("Etfb", "Etfb", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
- save_faceted_plot("LOC102923285", "PKM-like", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
- save_faceted_plot("LOC102928417", "LDHA", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
- save_faceted_plot("Tgfbi", "Tgfbi", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
- save_faceted_plot("Slc1a2", "Slc1a2", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+ save_faceted_plot("Adam22", "Adam22", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
+ save_faceted_plot("Bivm", "Bivm", EP_vobjdream, LP_vobjDream, EP_Sample_Info, LP_Sample_Info)
 
+ 
+ 
+ 
+ 

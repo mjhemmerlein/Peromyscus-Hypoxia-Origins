@@ -6,6 +6,7 @@ library(lme4)
 library(lmerTest)
 library(readxl)
 library(ggplot2)
+library(stringr)
 
 # Read in sample info
 Traits = read_xlsx("RNA_Seq_RawData/MetaData_LP.xlsx")
@@ -201,14 +202,29 @@ for (p in all_modules) {
 
 summaryBWLP02$Pvalue.O2corr <- p.adjust(summaryBWLP02$Pvalue.O2, method = 'BH')
 
-write.csv(summaryBWLP02, "LP_WGCNA_Output/LP_BW_Module_Trait_ModelSummary.csv")
+# write.csv(summaryBWLP02, "LP_WGCNA_Output/LP_BW_Module_Trait_ModelSummary.csv")
 
 # Create a dataset containing all gene-specific information
 genes=names(ExprData_BWLP)
 geneInfoBWLP = data.frame(Gene = genes,
                           moduleColor = moduleColorsBWLP)
 
-write.csv(geneInfoBWLP, "LP_WGCNA_Output/LP_BW_Modules.csv")
+# write.csv(geneInfoBWLP, "LP_WGCNA_Output/LP_BW_Modules.csv")
+
+
+# Summary of BW WGCNA
+summaryBWLP02 <- summaryBWLP02 %>%
+  mutate(moduleColor = str_remove(Module, "^ME")) %>%  
+  select(-Module) %>%                                  
+  left_join(                                           
+    geneInfoBWLP %>%
+      count(moduleColor, name = "ModuleSize"),
+    by = "moduleColor"
+  ) %>%
+  relocate(moduleColor, ModuleSize)                    
+
+# write.csv(summaryBWLP02, "LP_WGCNA_Output/LP_BW_Module_Trait_ModelSummary.csv")
+
 
 ## Plot eigenes against hypoxia/normoxia in BW animals ####
 ModuleME_Info_BWLP$hypoxia = TraitsBW_LP$O2

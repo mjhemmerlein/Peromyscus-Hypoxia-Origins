@@ -9,17 +9,26 @@ library(readxl)
 
 # Read and pivot
 GeneCounts = read_xlsx("RNA_Seq_RawData/DreamCounts.xlsx")
+GeneCounts$Background = as.numeric(GeneCounts$Background)
 
-GeneCounts = GeneCounts %>%
+GeneCounts <- GeneCounts %>%
   pivot_longer("Pop":"Highland", names_to = "DE", values_to = "DE_Freq") %>%
   mutate(
+    DE_Percent = (DE_Freq / Background) * 100,
+    Not_DE_Percent = 100 - DE_Percent,
     DE = fct_relevel(DE, "Pop", "Trt", "Ixn", "Lowland", "Highland"),
     Category = fct_recode(Category,
-                          "EP" = "Early Pregnancy",
-                          "LP" = "Late Pregnancy",
-                          "Shared" = "Conserved Across Pregnancy"),
-    Category = fct_relevel(Category, "EP", "LP", "Shared"),
-    )
+                               "EP" = "Early Pregnancy",
+                               "LP" = "Late Pregnancy",
+                               "Shared" = "Shared"),
+    Category = fct_relevel(Category, "EP", "LP", "Shared")) %>%
+  pivot_longer(cols = c(DE_Percent, Not_DE_Percent),
+               names_to = "Status",
+               values_to = "Percent") %>%
+  mutate(Status = recode(Status,
+                         "DE_Percent" = "DE",
+                         "Not_DE_Percent" = "Not DE"))
+
 
 GeneCounts %>%
   ggplot(aes(x = Category, y = DE_Freq)) +
@@ -42,6 +51,31 @@ GeneCounts %>%
   )
 
 ggsave("Plots/GeneCount_BarChart/BarChart.pdf", width = 12, height = 8, units = "in", dpi = 300)
+
+
+GeneCounts %>%
+  ggplot(aes(x = Category, y = Percent, fill = Status)) +
+  geom_col() +                          # stacked by default
+  facet_wrap(~ DE, scales = "fixed") +  # fixed y-axis across facets
+  geom_text(aes(label = ifelse(Status == "DE", DE_Freq, "")),
+            position = position_stack(vjust = 0.5), size = 6) +
+  scale_y_continuous(limits = c(0, 100)) +
+  labs(
+    y = "% of genes",
+    x = NULL
+  ) +
+  theme_classic() +
+  theme(
+    axis.title.y = element_text(face = "bold", size = 24, color = "black"),
+    axis.text.y  = element_text(face = "bold", size = 20, color = "black"),
+    axis.text.x  = element_text(face = "bold", size = 20, color = "black"),
+    strip.text   = element_text(face = "bold", size = 20),
+    legend.title = element_blank(),
+    legend.position = "top",
+    plot.title   = element_text(face = "bold", size = 24, hjust = 0.5)
+  )
+
+
 
 
 # Read in data

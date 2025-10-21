@@ -112,6 +112,27 @@ sum(EP_ISO_Summary$APRI == "TRUE")
 
 # write.csv(EP_ISO_Summary, "RNA_Seq_Output/EP_ISO_Ortho_Summary.csv")
 
+allO2_genes <- EP_ISO_Summary %>%
+  filter(O2_SIG == "SIG" | IXN_SIG == "SIG")
+
+length(unique(allO2_genes$Gene_ID))
+
+# Absolute effect size filter
+large_O2 <- EP_ISO_Summary %>%
+  filter(O2_SIG == "SIG", abs(O2_logFC) > 0.5)
+
+large_IXN <- EP_ISO_Summary %>%
+  filter(IXN_SIG == "SIG", abs(IXN_logFC) > 0.5)
+
+# Count unique genes across both
+large_genes <- bind_rows(large_O2, large_IXN) %>%
+  distinct(Gene_ID)
+
+nrow(large_genes)  # total unique genes with large effects in either
+
+
+# write.csv(allO2_genes, "RNA_Seq_Output/EP_HypoxiaGenes_Summary.csv")
+
 
 # IsoQuant Late Pregnancy -----------
 # Filtered at 0.5 CPM
@@ -205,8 +226,9 @@ sum(LP_ISO_Summary$ME_O2_SIG == "SIG")
 sum(LP_ISO_Summary$PBS == "TRUE")
 sum(LP_ISO_Summary$APRI == "TRUE")
 
-# write.csv(LP_ISO_Summary, "RNA_Seq_Output//LP_ISO_Ortho_Summary.csv")
+# write.csv(LP_ISO_Summary, "RNA_Seq_Output/LP_ISO_Ortho_Summary.csv")
 
+count = intersect(EP_ISO_Summary$Pman_GeneID, LP_ISO_Summary$Pman_GeneID)
 
 # IsoQuant Late Pregnancy JZ -----------
 # Filtered at 0.5 CPM
@@ -300,7 +322,7 @@ sum(LP_JZ_Summary$ME_O2_SIG == "SIG")
 sum(LP_JZ_Summary$PBS == "TRUE")
 sum(LP_JZ_Summary$APRI == "TRUE")
 
-# write.csv(LP_ISO_Summary, "RNA_Seq_Output//LP_ISO_Ortho_Summary.csv")
+# write.csv(LP_ISO_Summary, "RNA_Seq_Output/LP_ISO_Ortho_Summary.csv")
 
 
 
