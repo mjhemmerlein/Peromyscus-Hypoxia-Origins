@@ -34,8 +34,6 @@ TraitsBW_EP = Traits %>%
 TraitsME_EP = Traits %>%
   filter(Strain == "ME")
 
-
-
 # Read in Files + QC
 EPcounts = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 EPcounts = as.data.frame(EPcounts)
@@ -123,7 +121,7 @@ text(sftBW$fitIndices[,1], sftBW$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 NetBWEP = blockwiseModules(ExprData_BWEP, 
-                           power = 20, 
+                           power = 16, 
                            maxBlockSize = 14000,
                            TOMType = "signed", networkType = "signed hybrid",
                            minModuleSize = 30,
@@ -159,8 +157,8 @@ plotDendroAndColors(
 MEs0 = moduleEigengenes(ExprData_BWEP, moduleColorsBWEP)$eigengenes
 MEsBW_EP = orderMEs(MEs0) #the rownames of this dataset are equal to Expr
 
-# write.csv(MEsBW_EP, "EP_WGCNA_Output/EP_BW_moduleEigengenes.csv")
-# save(NetBWEP, MEsBW_EP, moduleLabelsBWEP, moduleColorsBWEP, geneTreeBWEP, file = "EP_WGCNA_Output/BWEP_network.RData")
+write.csv(MEsBW_EP, "EP_WGCNA_Output/EP_BW_moduleEigengenes.csv")
+save(NetBWEP, MEsBW_EP, moduleLabelsBWEP, moduleColorsBWEP, geneTreeBWEP, file = "EP_WGCNA_Output/BWEP_network.RData")
 
 load("EP_WGCNA_Output/BWEP_network.RData")
 
@@ -201,7 +199,7 @@ genes=names(ExprData_BWEP)
 geneInfoBWEP = data.frame(Gene = genes,
                           moduleColor = moduleColorsBWEP)
 
-# write.csv(geneInfoBWEP, "EP_WGCNA_Output/EP_BW_Modules.csv")
+write.csv(geneInfoBWEP, "EP_WGCNA_Output/EP_BW_Modules.csv")
 
 
 # Summary of BW WGCNA
@@ -215,7 +213,7 @@ summaryBWEP02 <- summaryBWEP02 %>%
   ) %>%
   relocate(moduleColor, ModuleSize)                    
 
-# write.csv(summaryBWEP02, "EP_WGCNA_Output/EP_BW_Module_Trait_ModelSummary.csv")
+write.csv(summaryBWEP02, "EP_WGCNA_Output/EP_BW_Module_Trait_ModelSummary.csv")
 
 
 ## Plot eigenes against hypoxia/normoxia in BW animals ####
@@ -267,7 +265,7 @@ text(sftME$fitIndices[,1], sftME$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 NetMEEP = blockwiseModules(ExprData_MEEP, 
-                           power = 20, 
+                           power = 16, 
                            maxBlockSize = 14000,
                            TOMType = "signed", 
                            networkType = "signed hybrid",
@@ -308,9 +306,9 @@ MEsMEEP = orderMEs(MEs0ME) #the rownames of this dataset are equal to Expr
 MEsMEEP$hypoxia = TraitsME_EP$O2
 MEsMEEP$fetalMass = TraitsME_EP$Fetus
 
-# write.csv(MEsMEEP, "EP_WGCNA_Output/EP_ME_moduleEigengenes.csv")
+write.csv(MEsMEEP, "EP_WGCNA_Output/EP_ME_moduleEigengenes.csv")
 
-# save(NetMEEP, MEsMEEP, moduleLabelsMEEP, moduleColorsMEEP, geneTreeMEEP, file = "EP_WGCNA_Output/MEEP_network.RData")
+save(NetMEEP, MEsMEEP, moduleLabelsMEEP, moduleColorsMEEP, geneTreeMEEP, file = "EP_WGCNA_Output/MEEP_network.RData")
 load("EP_WGCNA_Output/MEEP_network.RData")
 
 
@@ -352,7 +350,7 @@ genes=names(ExprData_MEEP)
 geneInfoMEEP = data.frame(Gene = genes,
                           moduleColor = moduleColorsMEEP)
 
-# write.csv(geneInfoBWEP, "EP_WGCNA_Output/EP_BW_Modules.csv")
+write.csv(geneInfoBWEP, "EP_WGCNA_Output/EP_BW_Modules.csv")
 
 # Summary of ME WGCNA
 summaryMEEP02 <- summaryMEEP02 %>%
@@ -365,7 +363,7 @@ summaryMEEP02 <- summaryMEEP02 %>%
   ) %>%
   relocate(moduleColor, ModuleSize)                    
 
-# write.csv(summaryMEEP02, "EP_WGCNA_Output/EP_ME_Module_Trait_ModelSummary.csv")
+write.csv(summaryMEEP02, "EP_WGCNA_Output/EP_ME_Module_Trait_ModelSummary.csv")
 
 # Create a dataset containing all gene-specific information
 genes=names(ExprData_MEEP)
