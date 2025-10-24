@@ -121,31 +121,6 @@ text(sftBW$fitIndices[,1], sftBW$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 
-# POWER = 8
-NetBWEP = blockwiseModules(ExprData_BWEP, 
-                           power = 8, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "EP_WGCNA_Output_Test/EPBWExprTOM",
-                           verbose = 3)
-
-load("EP_WGCNA_Output_Test/EPBWExprTOM-block.1.RData"); load("EP_WGCNA_Output_Test/EPBWExprTOM-block.2.RData")
-table(NetBWEP$colors)
-moduleLabelsBWEP = NetBWEP$colors
-moduleColorsBWEP = labels2colors(NetBWEP$colors)
-
-MEsBW_EP = NetBWEP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-geneTreeBWEP = NetBWEP$dendrograms[[1]]
-table(moduleColorsBWEP)
-dim(table(moduleColorsBWEP))
-
 # POWER = 12
 NetBWEP = blockwiseModules(ExprData_BWEP, 
                            power = 12, 
@@ -171,9 +146,34 @@ geneTreeBWEP = NetBWEP$dendrograms[[1]]
 table(moduleColorsBWEP)
 dim(table(moduleColorsBWEP))
 
-# POWER = 14
+# POWER = 16
 NetBWEP = blockwiseModules(ExprData_BWEP, 
-                           power = 14, 
+                           power = 16, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "EP_WGCNA_Output_Test/EPBWExprTOM",
+                           verbose = 3)
+
+load("EP_WGCNA_Output_Test/EPBWExprTOM-block.1.RData"); load("EP_WGCNA_Output_Test/EPBWExprTOM-block.2.RData")
+table(NetBWEP$colors)
+moduleLabelsBWEP = NetBWEP$colors
+moduleColorsBWEP = labels2colors(NetBWEP$colors)
+
+MEsBW_EP = NetBWEP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+geneTreeBWEP = NetBWEP$dendrograms[[1]]
+table(moduleColorsBWEP)
+dim(table(moduleColorsBWEP))
+
+# POWER = 18
+NetBWEP = blockwiseModules(ExprData_BWEP, 
+                           power = 18, 
                            maxBlockSize = 14000,
                            TOMType = "signed", networkType = "signed hybrid",
                            minModuleSize = 30,
@@ -227,7 +227,7 @@ dim(table(moduleColorsBWEP))
 
 
 
-## Highlanders WGCNA network build, i.e., ME ####
+# Highlanders WGCNA network build, i.e., ME ####
 
 #cluster the samples to check for outliers
 sampleTreeMEEP = hclust(dist(ExprData_MEEP), method = "average")
@@ -263,6 +263,32 @@ text(sftME$fitIndices[,1], sftME$fitIndices[,5], labels=powers, cex=cex1,col="re
 
 # Call the network topology analysis function
 
+# POWER = 4
+NetMEEP = blockwiseModules(ExprData_MEEP, 
+                           power = 4, 
+                           maxBlockSize = 14000,
+                           TOMType = "signed", 
+                           networkType = "signed hybrid",
+                           minModuleSize = 30,
+                           reassignThreshold = 0, 
+                           mergeCutHeight = 0.25,
+                           numericLabels = TRUE, 
+                           pamRespectsDendro = FALSE,
+                           saveTOMs = TRUE,
+                           saveTOMFileBase = "EP_WGCNA_Output_Test/EPMEExprTOM",
+                           verbose = 3)
+
+load("EP_WGCNA_Output_Test/EPMEExprTOM-block.1.RData"); load("EP_WGCNA_Output_Test/EPMEExprTOM-block.2.RData")
+table(NetMEEP$colors)
+moduleLabelsMEEP = NetMEEP$colors
+moduleColorsMEEP = labels2colors(NetMEEP$colors)
+MEsMEEP = NetMEEP$MEs # These are module eigengenes:first principal component of the expression matrix, 
+# i.e., weighted average expression profile of a sample in a module
+
+geneTreeMEEP = NetMEEP$dendrograms[[1]]
+table(moduleColorsMEEP)
+dim(table(moduleColorsMEEP))
+
 # POWER = 8
 NetMEEP = blockwiseModules(ExprData_MEEP, 
                            power = 8, 
@@ -315,35 +341,9 @@ geneTreeMEEP = NetMEEP$dendrograms[[1]]
 table(moduleColorsMEEP)
 dim(table(moduleColorsMEEP))
 
-# POWER = 14
+# POWER = 16
 NetMEEP = blockwiseModules(ExprData_MEEP, 
-                           power = 14, 
-                           maxBlockSize = 14000,
-                           TOMType = "signed", 
-                           networkType = "signed hybrid",
-                           minModuleSize = 30,
-                           reassignThreshold = 0, 
-                           mergeCutHeight = 0.25,
-                           numericLabels = TRUE, 
-                           pamRespectsDendro = FALSE,
-                           saveTOMs = TRUE,
-                           saveTOMFileBase = "EP_WGCNA_Output_Test/EPMEExprTOM",
-                           verbose = 3)
-
-load("EP_WGCNA_Output_Test/EPMEExprTOM-block.1.RData"); load("EP_WGCNA_Output_Test/EPMEExprTOM-block.2.RData")
-table(NetMEEP$colors)
-moduleLabelsMEEP = NetMEEP$colors
-moduleColorsMEEP = labels2colors(NetMEEP$colors)
-MEsMEEP = NetMEEP$MEs # These are module eigengenes:first principal component of the expression matrix, 
-# i.e., weighted average expression profile of a sample in a module
-
-geneTreeMEEP = NetMEEP$dendrograms[[1]]
-table(moduleColorsMEEP)
-dim(table(moduleColorsMEEP))
-
-# POWER = 20
-NetMEEP = blockwiseModules(ExprData_MEEP, 
-                           power = 20, 
+                           power = 16, 
                            maxBlockSize = 14000,
                            TOMType = "signed", 
                            networkType = "signed hybrid",
