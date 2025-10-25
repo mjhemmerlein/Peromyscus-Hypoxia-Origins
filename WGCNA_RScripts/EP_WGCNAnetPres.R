@@ -34,7 +34,6 @@ TraitsME_EP = Traits %>%
   filter(Strain == "ME")
 
 
-
 # Read in Files + QC
 EPcounts = read_xlsx("RNA_Seq_RawData/EP_Pman_ExtMMFrac_readcounts_Exon.xlsx")
 EPcounts = as.data.frame(EPcounts)
@@ -262,78 +261,5 @@ EP_BW_Summary <- EP_BW_Hypoxia  %>%
   left_join(EP_BW_PreservedStats, by = "ModuleColor")
 
 
-# write.csv(EP_BW_Summary, "EP_WGCNA_Output/EP_BW_Summary.csv")
-
-
-
-
-
-
-# Example
-ME_adapted <- moduleEigengenes(ExprData_MEEP, colors = moduleColorsMEEP)$eigengenes
-BW_ancestral <- moduleEigengenes(ExprData_BWEP, colors = moduleColorsBWEP)$eigengenes
-
-# Example: module preservation
-multiExpr <- list(adapted = list(data = ExprData_MEEP),
-                  ancestral = list(data = ExprData_BWEP))
-
-colorList <- list(adapted = moduleColorsMEEP,
-                  ancestral = moduleColorsBWEP)
-
-
-
-# Add population label to ancestral samples
-BW_ancestral <- cbind(TraitsBW_EP, BW_ancestral)
-BW_ancestral$population <- "ancestral"
-
-# Similarly, make sure adapted metadata exists
-# Assuming your adapted metadata is in TraitsMEEP
-ME_adapted <- cbind(TraitsME_EP, ME_adapted)
-ME_adapted$population <- "adapted"
-
-# Combine both populations
-combined_df <- bind_rows(ME_adapted, BW_ancestral)
-
-# Ensure hypoxia is a factor
-combined_df$hypoxia <- as.factor(combined_df$hypoxia)
-
-# Make sure hypoxia column is a factor
-combined_df$O2 <- as.factor(combined_df$O2)
-
-ggplot(combined_df, aes(x = Group, y = MEpurple, fill = O2)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.6) +
-  geom_jitter(aes(color = O2), width = 0.1, size = 1.5) +
-  labs(
-    y = "Module Eigengene (Tan)",
-    x = "Population",
-    title = "Module Eigengene Comparison by Population and Hypoxia"
-  ) +
-  theme_bw() +
-  scale_fill_manual(values = c("1N" = "#1f78b4", "2H" = "#33a02c")) +
-  scale_color_manual(values = c("1N" = "#1f78b4", "2H" = "#33a02c"))
-
-
-long_df <- combined_df %>%
-  pivot_longer(
-    cols = starts_with("ME"),      # all columns starting with "ME" (module eigengenes)
-    names_to = "Module",           # new column storing module color
-    values_to = "Eigengene"        # column with eigengene values
-  )
-
-
-ggplot(long_df, aes(x = Group, y = Eigengene, fill = O2)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.6) +
-  geom_jitter(aes(color = O2), width = 0.1, size = 1.5) +
-  labs(
-    y = "Module Eigengene",
-    x = "Population",
-    title = "Module Eigengene Comparison by Population and Hypoxia"
-  ) +
-  theme_bw() +
-  scale_fill_manual(values = c("1N" = "#1f78b4", "2H" = "#33a02c")) +
-  scale_color_manual(values = c("1N" = "#1f78b4", "2H" = "#33a02c")) +
-  facet_wrap(~ Module) +
-  ylim(-0.6, 0.6)
-
-
+write.csv(EP_BW_Summary, "EP_WGCNA_Output/EP_BW_Summary.csv")
 
