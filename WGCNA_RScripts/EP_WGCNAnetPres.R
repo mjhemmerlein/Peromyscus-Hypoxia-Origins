@@ -138,7 +138,7 @@ system.time( {
                                    loadPermutedStatistics = FALSE,
                                    nPermutations = 200,
                                    verbose = 3, 
-                                   maxModuleSize = 5301) #set max size to max in lowland network
+                                   maxModuleSize = 5668) #set max size to max in lowland network
 } )
 
 save(mpEP, file = "EP_WGCNA_Output/EPHighLander-Lowlander_modPreservation.RData")
