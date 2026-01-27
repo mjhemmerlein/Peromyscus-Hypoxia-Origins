@@ -82,25 +82,6 @@ EP_ISO_5 = left_join(EP_ISO_4, PBS, by = "Gene_ID") %>%
 EP_ISO_Summary = left_join(EP_ISO_5, Apriori, by = "Gene_ID") %>% 
   mutate(APRI = ifelse(is.na(APRI), "NA", PBS))
 
-# write.csv(EP_ISO_Summary, "RNA_Seq_Output/Dream_RawFiles/EP_ISO_Summary.csv")
-
-Orthologs = read_csv("RNA_Seq_RawData/EP_orthologs.csv")
-Orthologs = Orthologs %>%
-  select(Gene_ID, P_maniculatus_ID, P_maniculatus_attr, M_musculus_ID, M_musculus_attr)
-
-EP_ISO_Summary <- EP_ISO_Summary %>%
-  left_join(Orthologs, by = "Gene_ID") %>%
-  relocate(25:27, .after = 1) %>% # Move columns with "Ortholog" to positions 2-5
-  select(-P_maniculatus_ID)
-
-EP_ISO_Summary <- EP_ISO_Summary %>%
-  mutate(
-    Pman_GeneID = ifelse(grepl("^LOC", Gene_ID), M_musculus_ID, 
-                         ifelse(!is.na(Gene_ID), Gene_ID, M_musculus_ID)),
-    Pman_GeneID = ifelse(is.na(Pman_GeneID), Gene_ID, Pman_GeneID)
-  ) %>%
-  relocate(Pman_GeneID, .before = everything())
-
 # Summary
 sum(EP_ISO_Summary$strain_SIG == "SIG")
 sum(EP_ISO_Summary$O2_SIG == "SIG")
@@ -116,6 +97,12 @@ allO2_genes <- EP_ISO_Summary %>%
   filter(O2_SIG == "SIG" | IXN_SIG == "SIG")
 
 length(unique(allO2_genes$Gene_ID))
+
+IXN <- EP_ISO_Summary %>%
+  filter(IXN_SIG == "SIG")
+
+HYP <- EP_ISO_Summary %>%
+  filter(O2_SIG == "SIG", IXN_SIG != "SIG")
 
 # Absolute effect size filter
 large_O2 <- EP_ISO_Summary %>%
@@ -197,25 +184,6 @@ LP_ISO_5 = left_join(LP_ISO_4, PBS, by = "Gene_ID") %>%
 
 LP_ISO_Summary = left_join(LP_ISO_5, Apriori, by = "Gene_ID") %>% 
   mutate(APRI = ifelse(is.na(APRI), "NA", PBS))
-
-# write.csv(LP_ISO_Summary, "RNA_Seq_Output/Dream_RawFiles/LP_LZ_ISO_Summary.csv")
-
-Orthologs = read_csv("RNA_Seq_RawData/LP_orthologs.csv")
-Orthologs = Orthologs %>%
-  select(Gene_ID, P_maniculatus_ID, P_maniculatus_attr, M_musculus_ID, M_musculus_attr)
-
-LP_ISO_Summary <- LP_ISO_Summary %>%
-  left_join(Orthologs, by = "Gene_ID") %>%
-  relocate(25:27, .after = 1) %>% # Move columns with "Ortholog" to positions 2-5
-  select(-P_maniculatus_ID)
-
-LP_ISO_Summary <- LP_ISO_Summary %>%
-  mutate(
-    Pman_GeneID = ifelse(grepl("^LOC", Gene_ID), M_musculus_ID, 
-                         ifelse(!is.na(Gene_ID), Gene_ID, M_musculus_ID)),
-    Pman_GeneID = ifelse(is.na(Pman_GeneID), Gene_ID, Pman_GeneID)
-  ) %>%
-  relocate(Pman_GeneID, .before = everything())
 
 # Summary
 sum(LP_ISO_Summary$strain_SIG == "SIG")

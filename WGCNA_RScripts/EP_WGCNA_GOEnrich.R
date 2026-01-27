@@ -17,7 +17,7 @@ run_gost_analysis <- function(gene_list, background, organism = "mmusculus") {
     organism = organism,
     custom_bg = background,
     ordered_query = FALSE,
-    correction_method = "fdr",
+    correction_method = "g_SCS",
     evcodes = TRUE
   )
   

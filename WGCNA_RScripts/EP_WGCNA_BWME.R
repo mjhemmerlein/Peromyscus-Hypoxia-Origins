@@ -97,6 +97,8 @@ sftBW = pickSoftThreshold(ExprData_BWEP, powerVector = powers, verbose = 5,
 par(mfrow = c(1,2));
 cex1 = 0.9;
 
+# pdf("Plots/WGCNA_Plots/EP_BW_scale_connectivity.pdf", h = 4, w = 5)
+
 # Scale-free topology fit index as a function of the soft-thresholding power
 plot(sftBW$fitIndices[,1], 
      -sign(sftBW$fitIndices[,3]) * sftBW$fitIndices[,2],
@@ -117,7 +119,7 @@ plot(sftBW$fitIndices[,1],
      main = paste("Mean connectivity"))
 text(sftBW$fitIndices[,1], sftBW$fitIndices[,5], labels=powers, cex=cex1,col="red")
 
-
+# dev.off()
 
 # Call the network topology analysis function
 NetBWEP = blockwiseModules(ExprData_BWEP, 
@@ -132,6 +134,8 @@ NetBWEP = blockwiseModules(ExprData_BWEP,
                            saveTOMs = TRUE,
                            saveTOMFileBase = "EP_WGCNA_Output/EPBWExprTOM",
                            verbose = 3)
+
+load("EP_WGCNA_Output/BWEP_network.RData")
 
 load("EP_WGCNA_Output/EPBWExprTOM-block.1.RData"); load("EP_WGCNA_Output/EPBWExprTOM-block.2.RData")
 table(NetBWEP$colors)
@@ -160,8 +164,6 @@ MEsBW_EP = orderMEs(MEs0) #the rownames of this dataset are equal to Expr
 write.csv(MEsBW_EP, "EP_WGCNA_Output/EP_BW_moduleEigengenes.csv")
 save(NetBWEP, MEsBW_EP, moduleLabelsBWEP, moduleColorsBWEP, geneTreeBWEP, file = "EP_WGCNA_Output/BWEP_network.RData")
 
-load("EP_WGCNA_Output/BWEP_network.RData")
-
 
 ## BW Trait Module Associations and Correlations ####
 ModuleME_Info_BWEP = read.csv("EP_WGCNA_Output/EP_BW_moduleEigengenes.csv")
@@ -170,11 +172,7 @@ ModuleME_Info_BWEP = ModuleME_Info_BWEP %>% dplyr::select(-X)
 ModuleME_Info_BWEP = ModuleME_Info_BWEP %>% dplyr::select(-MEgrey) #remove grey module
 
 # Correlate modules to hypoxia OVERALL w/ mom as random effect
-Strain = TraitsBW_EP$Strain
 O2 = TraitsBW_EP$O2
-FetalMass = TraitsBW_EP$Fetus
-Sex = TraitsBW_EP$Sex
-# summaryBWEP = data.frame()
 all_modules = colnames(ModuleME_Info_BWEP)
 
 summaryBWEP02 = data.frame()
@@ -247,6 +245,8 @@ sftME = pickSoftThreshold(ExprData_MEEP, powerVector = powers, verbose = 5,
 par(mfrow = c(1,2));
 cex1 = 0.9;
 
+# pdf("Plots/WGCNA_Plots/EP_ME_scale_connectivity.pdf", h = 4, w = 5)
+
 # Scale-free topology fit index as a function of the soft-thresholding power
 plot(sftME$fitIndices[,1], -sign(sftME$fitIndices[,3])*sftME$fitIndices[,2],
      xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
@@ -262,6 +262,8 @@ plot(sftME$fitIndices[,1], sftME$fitIndices[,5],
      xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
      main = paste("Mean connectivity"))
 text(sftME$fitIndices[,1], sftME$fitIndices[,5], labels=powers, cex=cex1,col="red")
+
+# dev.off()
 
 # Call the network topology analysis function
 NetMEEP = blockwiseModules(ExprData_MEEP, 
@@ -320,11 +322,7 @@ ModuleME_Info_MEEP = ModuleME_Info_MEEP %>% dplyr::select(-MEgrey) #remove grey 
 ModuleME_Info_MEEP = ModuleME_Info_MEEP %>% select(-hypoxia)
 
 # Correlate modules to hypoxia OVERALL w/ mom as random effect
-Strain = TraitsME_EP$Strain
 O2 = TraitsME_EP$O2
-FetalMass = TraitsME_EP$Fetus
-Sex = TraitsME_EP$Sex
-# summaryMEEP = data.frame()
 all_modules = colnames(ModuleME_Info_MEEP)
 
 summaryMEEP02 = data.frame()

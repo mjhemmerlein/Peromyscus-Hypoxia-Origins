@@ -19,7 +19,7 @@ run_gost_analysis <- function(gene_list, background, organism = "mmusculus") {
     organism = organism,
     custom_bg = background,
     ordered_query = F,
-    correction_method = "fdr",
+    correction_method = "g_SCS",
     evcodes = T)
   
   results_df = data.frame(
@@ -40,7 +40,7 @@ run_gost_analysis <- function(gene_list, background, organism = "mmusculus") {
 
 # Up-Up
 EP_POP_UP = EP_LP_strain %>%
-  filter(Quadrant == "Up-Up") %>%
+  filter(Quadrant == "UP-UP") %>%
   pull(Mus_GeneID)
 
 EP_POP_UP_GOResults = run_gost_analysis(EP_POP_UP, background)
@@ -48,21 +48,24 @@ EP_POP_UP_GOResults = run_gost_analysis(EP_POP_UP, background)
 # Down-Down
 
 EP_POP_DOWN = EP_LP_strain %>%
-  filter(Quadrant == "Down-Down") %>%
+  filter(Quadrant == "DOWN-DOWN") %>%
   pull(Mus_GeneID)
 
 EP_POP_DOWN_GOResults = run_gost_analysis(EP_POP_DOWN, background)
 
+# write.csv(EP_POP_DOWN_GOResults, "EP_GOEnrichment_Output/EP_POP_DOWN_GOResults.csv", row.names = FALSE)
+
+
 # Up-Down
 EP_POP_UPDOWN = EP_LP_strain %>%
-  filter(Quadrant == "Up-Down") %>%
+  filter(Quadrant == "UP-DOWN") %>%
   pull(Mus_GeneID)
 
 EP_POP_UPDOWN_GOResults = run_gost_analysis(EP_POP_UPDOWN, background)
 
 # Down-Up
 EP_POP_DOWNUP = EP_LP_strain %>%
-  filter(Quadrant == "Down-Up") %>%
+  filter(Quadrant == "DOWN-UP") %>%
   pull(Mus_GeneID)
 
 EP_POP_DOWNUP_GOResults = run_gost_analysis(EP_POP_DOWNUP, background)

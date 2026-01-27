@@ -232,6 +232,17 @@ labelPoints(moduleSizeEP[selectModules],ZsummaryEP[selectModules],point.labelEP,
 abline(h=0); abline(h=2, col = "blue", lty = 2); abline(h=10, col = "red", lty = 2)
 
 
+pdf("Plots/WGCNA_Plots/WGCNA_Plot.pdf", width = 5.5, height = 8)
+plot(moduleSizeEP[selectModules], ZsummaryEP[selectModules],
+     col = 1, bg = modColorsEP[selectModules], pch = 21,
+     main = "EP Zsummary Preservation", cex = 1.5,
+     ylab = "Zsummary", xlab = "Module size",
+     log = "x", ylim = c(0, 100))
+labelPoints(moduleSizeEP[selectModules], ZsummaryEP[selectModules], point.labelEP, cex = 1, offs = 0.01)
+abline(h = 0); abline(h = 2, col = "blue", lty = 2); abline(h = 10, col = "red", lty = 2)
+dev.off()
+
+
 #### Add Zsummary scores to BWtables (i.e., preservation stats for highlanders)
 BWpreservedStatsEP = print(signif(statsZEP[, "Zsummary.pres", drop = FALSE],2))
 
@@ -251,7 +262,7 @@ EP_BW_PreservedStats  <- EP_BW_PreservedStats  %>%
   filter(ModuleColor != "gold") %>%
   filter(ModuleColor != "grey")
 
-# Create a data frame of module sizes
+# Create a data frame of module sizescd 
 moduleSizesBWEP <- as.data.frame(table(moduleColorsBWEP))
 
 # Rename columns for clarity
@@ -261,5 +272,5 @@ EP_BW_Summary <- EP_BW_Hypoxia  %>%
   left_join(EP_BW_PreservedStats, by = "ModuleColor")
 
 
-write.csv(EP_BW_Summary, "EP_WGCNA_Output/EP_BW_Summary.csv")
+# write.csv(EP_BW_Summary, "EP_WGCNA_Output/EP_BW_Summary.csv")
 

@@ -48,13 +48,12 @@ dim(dPman)
 # Log-CPM values
 logcpm <- cpm(dPman, log = TRUE)
 
-# Read in genes of interest
-LP_Summary = read_xlsx("RNA_Seq_Output/LP_ISO_Ortho_Summary.xlsx")
 
+# All hypoxia sensitive genes (303) -------
 
-# All hypoxia sensitive genes (404) -------
+LP_ISO_Summary = read_xlsx("RNA_Seq_Output/LP_ISO_Ortho_Summary.xlsx")
 
-gene_class <- LP_Summary %>%
+gene_class <- LP_ISO_Summary %>%
   filter(O2_SIG == "SIG" | IXN_SIG == "SIG") %>%
   mutate(Category = case_when(
     IXN_SIG == "SIG" ~ "IXN_SIG",
@@ -75,12 +74,23 @@ z_scores <- t(scale(t(logcpm_subset)))
 annotation_row <- data.frame(Category = gene_class$Category)
 row.names(annotation_row) <- gene_class$Pman_GeneID
 
-annotation_col <- data.frame(Group = LP_Sample_Info$Group)
-row.names(annotation_col) <- colnames(z_scores)
+# Add Group and Sex to column annotations
+annotation_col <- data.frame(
+  Group = LP_Sample_Info$Group,
+  Sex = LP_Sample_Info$Sex
+)
+rownames(annotation_col) <- colnames(z_scores)
 
-sample_order <- order(annotation_col$Group)
+# Order columns by Group first, then Sex within each Group
+sample_order <- order(annotation_col$Group, annotation_col$Sex)
+
+# Add visual gaps between Groups
 gaps_col <- cumsum(table(annotation_col$Group[sample_order]))
 
+# (Optionally) also show gaps between sexes within each group:
+# gaps_col <- cumsum(table(paste(annotation_col$Group, annotation_col$Sex)[sample_order]))
+
+# Cluster genes by category (as before)
 clustered_order <- c()
 for (cat in levels(gene_class$Category)) {
   subset_genes <- gene_class$Pman_GeneID[gene_class$Category == cat]
@@ -94,14 +104,40 @@ for (cat in levels(gene_class$Category)) {
 
 gaps_row <- cumsum(table(gene_class$Category))
 
-pheatmap(z_scores[clustered_order, sample_order],
-         scale = "none",
-         cluster_rows = FALSE,   # we already clustered manually
-         cluster_cols = FALSE,   # we’re ordering by group
-         annotation_row = annotation_row,
-         annotation_col = annotation_col,
-         gaps_row = gaps_row,
-         gaps_col = gaps_col,
-         main = "LP Z-scores of Unique O2/IXN-Significant Genes",
-         show_rownames = ifelse(nrow(z_scores) < 50, TRUE, FALSE),
-         color = viridis(100, option = "A"))
+# Draw heatmap
+pheatmap(
+  z_scores[clustered_order, sample_order],
+  scale = "none",
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  annotation_row = annotation_row,
+  annotation_col = annotation_col,
+  gaps_row = gaps_row,
+  gaps_col = gaps_col,
+  main = "LP Z-scores of Unique O2/IXN-Significant Genes",
+  show_rownames = ifelse(nrow(z_scores) < 50, TRUE, FALSE),
+  color = viridis(100, option = "A")
+)
+
+save_pheatmap_pdf <- function(pheatmap_result, filename, width = 10, height = 7) {
+  pdf(filename, width = width, height = height)
+  grid::grid.newpage()
+  grid::grid.draw(pheatmap_result$gtable)
+  dev.off()
+}
+
+hm = pheatmap(
+  z_scores[clustered_order, sample_order],
+  scale = "none",
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  annotation_row = annotation_row,
+  annotation_col = annotation_col,
+  gaps_row = gaps_row,
+  gaps_col = gaps_col,
+  main = "LP Z-scores of Unique O2/IXN-Significant Genes",
+  show_rownames = ifelse(nrow(z_scores) < 50, TRUE, FALSE),
+  color = viridis(100, option = "A")
+)
+
+save_pheatmap_pdf(hm, "Plots/Heatmaps/LP_Zscore_heatmap.pdf")

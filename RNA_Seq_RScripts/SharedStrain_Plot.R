@@ -24,7 +24,7 @@ EP_ISO_Strain = EP_ISO_Strain %>%
   rename(EP_strain_logFC = strain_logFC) %>%
   rename(EP_strain_adj_P.Val = strain_adj_P.Val) %>%
   rename(EP_strain_SIG = strain_SIG) %>%
-  select(Pman_GeneID, Mus_GeneID, JLamb_GeneID, Jlamb_PmanAttribute, EP_strain_logFC, EP_strain_adj_P.Val, EP_strain_SIG)
+  select(Pman_GeneID, Mus_GeneID, Mus_GeneID, Mus_Descrip, EP_strain_logFC, EP_strain_adj_P.Val, EP_strain_SIG)
 
 # Consolidate diffexpressed_EP calculation
 EP_ISO_Strain <- EP_ISO_Strain %>%
@@ -70,13 +70,12 @@ Strain_summary <- EP_LP_strain %>%
   summarise(Freq = n()) %>%
   mutate(Percent = Freq / sum(Freq) * 100)
 
-
 # write.csv(EP_LP_strain, file = "RNA_Seq_Output/EP_LP_SharedStrain.csv")
 
 
-quadrant_colors <- c("UP-UP" = "#3b8132", 
+quadrant_colors <- c("UP-UP" = "#247BB1", 
                      "UP-DOWN" = "darkgray", 
-                     "DOWN-DOWN" = "#8bca84", 
+                     "DOWN-DOWN" = "#F4C552", 
                      "DOWN-UP" = "#262626")
 
 # Create a 4-quadrant scatter plot
@@ -95,7 +94,7 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
     panel.grid.minor = element_blank(),
     panel.grid.major = element_blank())
 
-ggsave("Plots/Quadrant_Plots/Unlabeled_Quad.pdf", width = 6, height = 6, units = "in", dpi = 300)
+# ggsave("Plots/Quadrant_Plots/Unlabeled_Quad.pdf", width = 6, height = 6, units = "in", dpi = 300)
 
 
 
@@ -148,7 +147,12 @@ Top_genes = rbind(
 # Quadrant w/ labels 
 
 EP_LP_strain <- EP_LP_strain %>%
-  mutate(Label = ifelse(JLamb_GeneID %in% Top_genes$JLamb_GeneID, JLamb_GeneID, NA))
+  mutate(Label = ifelse(
+    !is.na(Mus_GeneID) & Mus_GeneID != "NA" & Mus_GeneID %in% Top_genes$Mus_GeneID,
+    Mus_GeneID,
+    NA
+  ))
+
 
 ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadrant)) +
   geom_point(alpha = 0.6, size = 3.5) +
@@ -166,7 +170,8 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
     axis.title.x = element_text(face = "bold", size = 24),
     axis.text.x = element_text(face = "bold", size = 20)) +
   geom_text_repel(aes(label = Label), 
-                  size = 5, 
+                  size = 5,
+                  box.padding = 0.5,
                   na.rm = TRUE, 
                   color = "black",
                   segment.color = "black", 
@@ -176,3 +181,29 @@ ggplot(EP_LP_strain, aes(x = EP_strain_logFC, y = LP_strain_logFC, color = Quadr
   labs(y = "Late Pregnancy\npopulation logFC", x = "Early Pregnancy\npopulation logFC")
 
 # ggsave("Dream_Output/Plots/Quadrant_Plots/AllgenesQuadrant.png", width = 10, height = 10, units = "in", dpi = 300)
+
+
+ggplot(Strain_summary, aes(x = reorder(Quadrant, Percent), y = Percent)) +
+  geom_segment(aes(xend = Quadrant, y = 0, yend = Percent), 
+               color = "gray60", linewidth = 1) +
+  geom_point(size = 5, color = "#2c7fb8") +
+  geom_text(aes(label = sprintf("%.1f%%", Percent)), 
+            hjust = -0.3, size = 4) +   # use hjust for horizontal text alignment
+  labs(
+    x = NULL,
+    y = "Percent of genes",
+    title = "Direction of Expression Changes"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor.y = element_blank()
+  ) +
+  coord_flip(clip = "off") +
+  theme(plot.margin = margin(10, 30, 10, 10))
+
+# ggsave("Plots/Quadrant_Plots/Lollipop.pdf", width = 5, height = 6, units = "in", dpi = 300)
+
+
+
+

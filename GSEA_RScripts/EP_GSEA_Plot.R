@@ -20,7 +20,7 @@ EP_ISO_Strain <- read_xlsx("RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx")
 
 # LOWLAND ONLY ------
 # Ranked genes
-rankings_low <- sign(EP_ISO_Strain$BW_O2_logFC)*(-log10(EP_ISO_Strain$BW_O2_adj_P.Val)) # signed p values from spatial DGE as ranking
+rankings_low <- sign(EP_ISO_Strain$BW_O2_logFC)*(-log10(EP_ISO_Strain$BW_O2_P.Val)) # signed p values from spatial DGE as ranking
 names(rankings_low) <- EP_ISO_Strain$Mus_GeneID # genes as names
 
 head(rankings_low)
@@ -53,37 +53,36 @@ sum(GSEA_low[, padj < 0.05])
 
 # Let's filter for significant pathways first (optional)
 GSEA_sig_low <- GSEA_low %>% 
-  filter(padj < 0.05) %>%  # or pval < 0.01
-  arrange(desc(NES))       # NES = normalized enrichment score
+  filter(padj < 0.05) %>%
+  arrange(desc(NES))
 
 # Make sure pathway names are factors so they plot nicely
 GSEA_sig_low$pathway <- factor(GSEA_sig_low$pathway, levels = GSEA_sig_low$pathway)
 
 # Dot plot
-ggplot(GSEA_sig_low, aes(x = NES, y = pathway, size = -log10(padj), color = NES)) +
+ggplot(GSEA_sig_low, aes(x = NES, y = pathway, size = -log10(pval), color = NES)) +
   geom_point() +
   scale_color_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
   labs(x = "Normalized Enrichment Score (NES)",
        y = "Pathway",
-       size = "-log10(adj p-value)",
+       size = "-log10(p-value)",
        color = "NES") +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 8))
 
-leading_edge_long <- GSEA_low %>%
-  unnest(leadingEdge) %>%
-  filter(pathway == "HALLMARK_OXIDATIVE_PHOSPHORYLATION") %>%
-  select(leadingEdge)
+GSEA_lowland_saving = GSEA_sig_low %>%
+  select(-leadingEdge)
 
+# write.csv(GSEA_lowland_saving, "EP_GSEA_Output/EP_GSEA_Lowland.csv")
 
 # HIGHLAND ONLY ------
 # Ranked genes
-rankings_high <- sign(EP_ISO_Strain$ME_O2_logFC)*(-log10(EP_ISO_Strain$ME_O2_adj_P.Val)) # signed p values from spatial DGE as ranking
-names(rankings_high) <- EP_ISO_Strain$Mus_GeneID # genes as names
+rankings_high <- sign(EP_ISO_Strain$ME_O2_logFC)*(-log10(EP_ISO_Strain$ME_O2_P.Val)) 
+names(rankings_high) <- EP_ISO_Strain$Mus_GeneID 
 
 head(rankings_high)
 
-rankings_high <- sort(rankings_high, decreasing = TRUE) # sort genes by ranking
+rankings_high <- sort(rankings_high, decreasing = TRUE) 
 plot(rankings_high)
 
 max(rankings_high)
@@ -95,12 +94,11 @@ ggplot(data.frame(gene_symbol = names(rankings_high)[1:50], ranks = rankings_hig
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 
 # Run GSEA
-GSEA_high <- fgsea(pathways = gene_sets, # List of gene sets to check
+GSEA_high <- fgsea(pathways = gene_sets, 
                    stats = rankings_high,
-                   scoreType = 'std', # in this case we have both pos and neg rankings_high. if only pos or neg, set to 'pos', 'neg'
-                   minSize = 10,
+                   scoreType = 'std', 
                    maxSize = 500,
-                   nproc = 1) # for parallelisation
+                   nproc = 1)
 
 head(GSEA_high)
 
@@ -109,39 +107,29 @@ head(GSEA_high[order(pval), ])
 sum(GSEA_high[, pval < 0.05])
 sum(GSEA_high[, padj < 0.05])
 
-# Let's filter for significant pathways first (optional)
-GSEA_sig_high <- GSEA_high %>% 
-  filter(padj < 0.05) %>%  # or pval < 0.01
-  arrange(desc(NES))       # NES = normalized enrichment score
 
-# Make sure pathway names are factors so they plot nicely
+GSEA_sig_high <- GSEA_high %>% 
+  filter(padj < 0.05) %>%  
+  arrange(desc(NES))       
+
 GSEA_sig_high$pathway <- factor(GSEA_sig_high$pathway, levels = GSEA_sig_high$pathway)
 
 # Dot plot
-ggplot(GSEA_sig_high, aes(x = NES, y = pathway, size = -log10(padj), color = NES)) +
+ggplot(GSEA_sig_high, aes(x = NES, y = pathway, size = -log10(pval), color = NES)) +
   geom_point() +
   scale_color_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
   labs(x = "Normalized Enrichment Score (NES)",
        y = "Pathway",
-       size = "-log10(adj p-value)",
+       size = "-log10(p-value)",
        color = "NES") +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 8))
 
-leading_edge_long <- GSEA_high %>%
-  unnest(leadingEdge) %>%
-  filter(pathway == "HALLMARK_OXIDATIVE_PHOSPHORYLATION") %>%
-  select(leadingEdge)
+GSEA_highland_saving = GSEA_sig_high %>%
+  select(-leadingEdge)
 
-leading_edge_long <- GSEA_high %>%
-  unnest(leadingEdge) %>%
-  filter(pathway == "HALLMARK_DNA_REPAIR") %>%
-  select(leadingEdge)
+# write.csv(GSEA_highland_saving, "EP_GSEA_Output/EP_GSEA_Highland.csv")
 
-leading_edge_long <- GSEA_high %>%
-  unnest(leadingEdge) %>%
-  filter(pathway == "HALLMARK_MYC_TARGETS_V1") %>%
-  select(leadingEdge)
 
 
 # FACETED POPULATION GSEA PLOT ------
@@ -205,7 +193,7 @@ ggplot(plot_data, aes(x = NES, y = pathway_ordered, color = condition)) +
   # Points - only show significant ones, sized by p-value
   geom_point(
     data = plot_data %>% filter(padj < 0.05),
-    aes(size = -log10(padj))) +
+    aes(size = -log10(pval))) +
   geom_vline(xintercept = 0, linetype = "solid", color = "gray50") +
   
   # Facet by pathway group
@@ -215,7 +203,7 @@ ggplot(plot_data, aes(x = NES, y = pathway_ordered, color = condition)) +
     x = "Normalized Enrichment Score (NES)",
     y = "Pathway",
     color = "Population",
-    size = "-log10(adj p-value)"
+    size = "-log10(p-value)"
   ) +
   scale_x_continuous(limits = c(-3, 3)) +
   scale_color_manual(values = c("Highland" = "#99c6cc", "Lowland" = "#cba34e")) +
@@ -232,7 +220,7 @@ ggplot(plot_data, aes(x = NES, y = pathway_ordered, color = condition)) +
     plot.subtitle = element_text(size = 11, color = "gray40")
   )
 
-ggsave("Plots/GSEA_Plots/SharedPathway_GSEA.pdf", width = 12, height = 8, units = "in", dpi = 300)
+# ggsave("Plots/GSEA_Plots/SharedPathway_GSEA.pdf", width = 12, height = 8, units = "in", dpi = 300)
 
 # PATHWAY PLOTS ------------
 

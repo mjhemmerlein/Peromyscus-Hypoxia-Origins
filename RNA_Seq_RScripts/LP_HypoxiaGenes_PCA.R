@@ -82,7 +82,7 @@ ggplot(mds_df, aes(x = Dim1, y = Dim2, color = Pop, shape = Treatment)) +
   labs(
     x = paste("Dimension 1 (", round(mds$var.explained[1] * 100, 1), "%)", sep = ""),
     y = paste("Dimension 2 (", round(mds$var.explained[2] * 100, 1), "%)", sep = ""),
-    title = "LP MDS Plot Hypoxia Genes (424)"
+    title = "LP MDS Plot Hypoxia Genes (303)"
   ) +
   theme_classic() +
   scale_shape_manual(values = c(16,5)) +

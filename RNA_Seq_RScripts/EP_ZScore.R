@@ -82,8 +82,6 @@ sample_order <- order(annotation_col$Group, annotation_col$Sex)
 # Add visual gaps between Groups
 gaps_col <- cumsum(table(annotation_col$Group[sample_order]))
 
-# (Optionally) also show gaps between sexes within each group:
-# gaps_col <- cumsum(table(paste(annotation_col$Group, annotation_col$Sex)[sample_order]))
 
 # Cluster genes by category (as before)
 clustered_order <- c()
@@ -114,6 +112,37 @@ pheatmap(
   color = viridis(100, option = "A")
 )
 
+
+gene_of_interest <- "Cacna1s"
+
+annotation_row$Highlight <- ifelse(
+  rownames(annotation_row) == gene_of_interest,
+  "Target",
+  "Other"
+)
+
+ann_colors <- list(
+  Highlight = c(Target = "red", Other = "white")
+)
+
+pheatmap(
+  z_scores[clustered_order, sample_order],
+  scale = "none",
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  annotation_row = annotation_row,
+  annotation_col = annotation_col,
+  annotation_colors = ann_colors,
+  gaps_row = gaps_row,
+  gaps_col = gaps_col,
+  main = "EP Z-scores of Unique O2/IXN-Significant Genes",
+  show_rownames = TRUE,
+  color = viridis(100, option = "A")
+)
+
+
+
+
 save_pheatmap_pdf <- function(pheatmap_result, filename, width = 10, height = 7) {
   pdf(filename, width = width, height = height)
   grid::grid.newpage()
@@ -136,5 +165,3 @@ hm = pheatmap(
 )
 
 save_pheatmap_pdf(hm, "Plots/Heatmaps/EP_Zscore_heatmap.pdf")
-
-
