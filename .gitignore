@@ -3,7 +3,6 @@
 .RData
 .Ruserdata
 .DS_Store
-EP_WGCNA_Output/*.RData
 Plots/
 EP_WGCNA_Output/*.csv
 EP_WGCNA_Output/GO_Results/
