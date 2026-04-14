@@ -70,6 +70,12 @@ median_effect_POP <- EP_ISO_Summary %>%
 
 median(abs(median_effect_POP$strain_logFC))
 
+POP = EP_ISO_Summary %>%
+  filter(strain_SIG == "SIG") %>%
+  filter(abs(strain_logFC) > 1)
+
+
+
 PBScount = EP_ISO_Summary %>%
   filter(strain_SIG == "SIG") %>%
   filter(PBS == "TRUE")
@@ -90,6 +96,7 @@ EP_POP_PBS_DOWN_GOResults = run_gost_analysis(EP_POP_PBS_DOWN, background)
 # Hypoxia --------
 
 EP_O2 = EP_ISO_Summary %>%
+  filter(IXN_SIG != "SIG") %>%
   filter(O2_SIG == "SIG") %>%
   pull(Mus_GeneID)
 
@@ -120,6 +127,7 @@ median_effect_O2 <- EP_ISO_Summary %>%
   filter(O2_SIG == "SIG")
 
 median(abs(median_effect_O2$O2_logFC))
+
 
 # Interaction -------
 

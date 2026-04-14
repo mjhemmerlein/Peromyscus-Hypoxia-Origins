@@ -119,90 +119,6 @@ print(fisher_IXN$fisher_table[[1]])
 
 # PLOTTING ------
 
-module_size_order <- fisher_HYP %>%
-  arrange(desc(ModuleSize)) %>%
-  pull(ModuleLetter) %>%
-  unique()  # ensure unique values
-
-fisher_all <- bind_rows(fisher_POP, fisher_HYP, fisher_IXN) %>%
-  # Remove rows with invalid Odds Ratios
-  filter(Odds_Ratio > 0, !is.infinite(Odds_Ratio), !is.nan(Odds_Ratio)) %>%
-  mutate(
-    # Calculate log2 values (now all valid)
-    log2OR = log2(Odds_Ratio),
-    log2CI_low = log2(CI_lower),
-    log2CI_high = log2(CI_upper),
-    
-    # Set factor levels based on module size (largest to smallest)
-    ModuleLetter = factor(ModuleLetter, levels = module_size_order),
-    Factor = factor(Factor, levels = c("Strain", "HYP", "IXN"))
-  )
-
-
-ggplot(fisher_all, aes(x = log2OR, y = ModuleLetter)) +
-  geom_vline(xintercept = 0, color = "gray40", linetype = "solid", linewidth = 0.8) +
-  
-  geom_errorbarh(
-    aes(xmin = log2CI_low, xmax = log2CI_high, group = Factor, color = Fisher_SIG),
-    height = 0,
-    linewidth = 1,
-    position = position_dodge(width = 0.7)
-  ) +
-
-  geom_point(
-    aes(shape = Factor, color = Fisher_SIG, group = Factor),
-    size = 4.5,
-    position = position_dodge(width = 0.7)
-  ) +
-  
-  scale_color_manual(
-    values = c("NS" = "gray40", "SIG" = "#DF4B68"),
-    name = "Significance"
-  ) +
-  
-  scale_shape_manual(
-    values = c("Strain" = 16, "HYP" = 17, "IXN" = 15),
-    name = "Group"
-  ) +
-
-  labs(
-    x = expression(bold(log[2]*"(Odds Ratio)")),
-    y = "Module",
-    title = "Module Enrichment by Group (Fisher Test)"
-  ) +
-  
-  scale_x_continuous(
-    limits = c(-8, 8),
-    breaks = seq(-8, 8, 1),     
-    labels = seq(-8, 8, 1),     
-    minor_breaks = seq(-8, 8, 0.5)
-  ) +
-  
-  theme_bw(base_size = 12) +
-  theme(
-    # Grid
-    panel.grid.major.y = element_line(color = "gray95", linewidth = 0.3),
-    panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_line(color = "gray90", linewidth = 0.3),
-    
-    # Axes
-    axis.title = element_text(face = "bold", size = 12),
-    axis.text.y = element_text(size = 10, face = "bold"),
-    axis.text.x = element_text(size = 10),
-    
-    # Title and legend
-    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
-    legend.position = "top",
-    legend.box = "horizontal",
-    legend.text = element_text(size = 10)
-  )
-
-# ggsave("Plots/WGCNA_Plots/WGCNA_Fishers_Forest.pdf", width = 6, height = 6, units = "in", dpi = 300)
-
-
-
-# Raw Odds Ratios
-
 fisher_all <- bind_rows(fisher_POP, fisher_HYP, fisher_IXN)
 
 manual_levels <- c(
@@ -226,26 +142,36 @@ fisher_all <- fisher_all %>%
     Module_Type = paste(ModuleLetter, Factor, sep="_"),
     Module_Type = factor(Module_Type, levels = rev(manual_levels)),
     
-    # Placeholder for NS points
-    OR_plot      = ifelse(Fisher_SIG == "NS", 0.01, Odds_Ratio),
-    CI_low_plot  = ifelse(Fisher_SIG == "NS", 0.01, CI_lower),
-    CI_high_plot = ifelse(Fisher_SIG == "NS", 0.01, CI_upper),
-    color_plot   = ifelse(Fisher_SIG == "NS", "gray", "black")
+    OR_plot = case_when(
+      Fisher_SIG == "NS" ~ 0.01,
+      Odds_Ratio == 0    ~ 0.005,
+      TRUE               ~ Odds_Ratio
+    ),
+    CI_low_plot = case_when(
+      Fisher_SIG == "NS" ~ 0.01,
+      CI_lower == 0      ~ 0.005,
+      TRUE               ~ CI_lower
+    ),
+    CI_high_plot = case_when(
+      Fisher_SIG == "NS" ~ 0.01,
+      TRUE               ~ CI_upper
+    ),
+    color_plot = ifelse(Fisher_SIG == "NS", "gray", "black")
   )
 
 
 ggplot(fisher_all, aes(x = OR_plot, y = Module_Type, shape = Factor)) +
   geom_errorbarh(aes(xmin = CI_low_plot, xmax = CI_high_plot, color = color_plot),
-                 height = 0.2, linewidth = 0.5) +
+                 height = 0, linewidth = 0.5) +
   geom_point(aes(color = color_plot), size = 4) +
   geom_vline(xintercept = 1, color = "gray40") +
   scale_color_identity() +
   scale_x_continuous(
-    limits = c(0.01, 100),
+    limits = c(0.004, 100),  # just below 0.005 
     trans = "log10",
-    breaks = c(0.01,0.1,1,10,50,100),
-    labels = c("0.01","0.1","1","10","50","100")
-  ) +
+    breaks = c(0.01, 0.1, 1, 10, 50, 100),
+    labels = c("0.01", "0.1", "1", "10", "50", "100")
+  )+
   labs(x = "Odds Ratio (log10 scale)", y = "Module") +
   theme_bw(base_size = 12) +
   theme(
@@ -258,7 +184,7 @@ ggplot(fisher_all, aes(x = OR_plot, y = Module_Type, shape = Factor)) +
     name = "Factor")
 
 
-# ggsave("Plots/WGCNA_Plots/WGCNA_Fishers_Forestv2.pdf", width = 7, height = 6, units = "in", dpi = 300)
+ggsave("Plots/WGCNA_Plots/WGCNA_Fishers_Forestv2.pdf", width = 8, height = 6, units = "in", dpi = 300)
 
 
 

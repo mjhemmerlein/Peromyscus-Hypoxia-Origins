@@ -55,6 +55,9 @@ for (col in colors) {
   go_result <- run_gost_analysis(gene_list, background)
   
   if (!is.null(go_result)) {
+    
+    go_result <- go_result[order(go_result$P.value), ]
+    
     write.csv(go_result, paste0("EP_WGCNA_Output/GO_Results/", col, ".csv"), row.names = FALSE)
   }
 }

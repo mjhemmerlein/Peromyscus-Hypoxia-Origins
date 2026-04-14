@@ -7,7 +7,9 @@ library(performance)
 
 # Read and clean data
 
-EP <- read_xlsx("Placental_Histology/EP BW_ME Quantification.xlsx") %>%
+options(contrasts=c("contr.sum","contr.poly"))
+
+EP_Quant <- read_xlsx("Placental_Histology/EP BW_ME Quantification.xlsx") %>%
   select(-Qualitative_Notes) %>%
   mutate(across(c(Mom, Pop, O2), as.factor),
          LZ_Area = as.numeric(LZ_Area),
@@ -25,11 +27,11 @@ EP <- read_xlsx("Placental_Histology/EP BW_ME Quantification.xlsx") %>%
 
 # LZ area -------
 
-LZ = lmer(LZ_Area ~ Pop*O2 + (1|Imp_Uniq), data = EP)
+LZ = lmer(LZ_Area ~ Pop*O2 + (1|Imp_Uniq), data = EP_Quant)
 anova(LZ)
 summary(LZ)
 
-contrast(emmeans(LZ, ~ Pop*O2), method = "pairwise")
+contrast(emmeans(LZ, ~ Pop*O2), method = "pairwise", adjust = "tukey")
 
 plot(resid(LZ))
 qqnorm(resid(LZ));qqline(resid(LZ))
@@ -40,13 +42,11 @@ LZ_anova = rownames_to_column(LZ_anova, var = "Term")
 
 # Prog area ---------
 
-Prog = lmer(Prog_Sum ~ Pop*O2 + (1|Imp_Uniq), data = EP)
+Prog = lmer(Prog_Sum ~ Pop*O2 + (1|Imp_Uniq), data = EP_Quant)
 anova(Prog)
 summary(Prog)
 
-contrast(emmeans(Prog, ~ Pop*O2), method = "pairwise")
-
-contrast(emmeans(Prog, ~ Pop*O2), method = "pairwise", adjust = "none")
+contrast(emmeans(Prog, ~ Pop*O2), method = "pairwise", adjust = "tukey")
 
 plot(resid(Prog))
 qqnorm(resid(Prog));qqline(resid(Prog))
@@ -57,12 +57,10 @@ Prog_anova = rownames_to_column(Prog_anova, var = "Term")
 
 # Prog area log ---------
 
-Prog_log = lmer(log(Prog_Sum) ~ Pop*O2 + (1|Imp_Uniq), data = EP)
+Prog_log = lmer(log(Prog_Sum) ~ Pop*O2 + (1|Imp_Uniq), data = EP_Quant)
 anova(Prog_log)
 
-contrast(emmeans(Prog_log, ~ Pop*O2), method = "pairwise")
-
-contrast(emmeans(Prog_log, ~ Pop*O2), method = "pairwise", adjust = "none")
+contrast(emmeans(Prog_log, ~ Pop*O2), method = "pairwise", adjust = "tukey")
 
 plot(resid(Prog_log))
 qqnorm(resid(Prog_log));qqline(resid(Prog_log))
@@ -73,12 +71,10 @@ Prog_log_anova = rownames_to_column(Prog_log_anova, var = "Term")
 
 
 # Calculate proportion and model on proportion (Ratio) ----------
-Prog_ratio = lmer(log(Prog_LZ) ~ Pop*O2 + (1|Imp_Uniq), data = EP)
+Prog_ratio = lmer(log(Prog_LZ) ~ Pop*O2 + (1|Imp_Uniq), data = EP_Quant)
 anova(Prog_ratio)
 
-contrast(emmeans(Prog_ratio, ~ Pop*O2), method = "pairwise")
-
-contrast(emmeans(Prog_ratio, ~ Pop*O2), method = "pairwise", adjust = "none")
+contrast(emmeans(Prog_ratio, ~ Pop*O2), method = "pairwise", adjust = "tukey")
 
 Prog_ratio_anova = anova(Prog_ratio)
 Prog_ratio_anova = as.data.frame(Prog_ratio_anova)
@@ -87,11 +83,11 @@ Prog_ratio_anova = rownames_to_column(Prog_ratio_anova, var = "Term")
 
 # Progenitor with LZ as a predictor -------
 
-Prog_LZ = lmer(log(Prog_Sum) ~ Pop*O2 + LZ_Area + (1|Imp_Uniq), data = EP)
+Prog_LZ = lmer(log(Prog_Sum) ~ Pop*O2 + LZ_Area + (1|Imp_Uniq), data = EP_Quant)
 anova(Prog_LZ)
 summary(Prog_LZ)
 
-contrast(emmeans(Prog_LZ, ~ Pop*O2), method = "pairwise")
+contrast(emmeans(Prog_LZ, ~ Pop*O2), method = "pairwise", adjust = "tukey")
 
 plot(resid(Prog_LZ))
 qqnorm(resid(Prog_LZ));qqline(resid(Prog_LZ))

@@ -4,6 +4,7 @@ library(ggplot2)
 library(readxl)
 library(emmeans) 
 library(lmerTest)
+library(ggrepel)
 
 # Read in data
 
@@ -27,7 +28,10 @@ EP = EP %>%
   mutate(Pop = fct_recode(Pop, 
                           "Lowland" = "BW", 
                           "Highland" = "ME")) %>%
-  mutate(Group = paste(Pop,O2)) 
+  mutate(Group = paste(Pop,O2),
+         Imp_Number = substr(`Slide ID`, 1, 3),
+         Imp_Uniq = paste0(Mom,"_",Imp_Number),
+         Imp_Uniq = as.factor(Imp_Uniq))
 
 EP$Group = as.factor(EP$Group)
 
@@ -40,25 +44,16 @@ EP_BW = EP %>%
 EP_ME = EP %>%
   filter(Pop == "Highland")
 
-# LZ
+Avg_ImpSite = EP %>%
+  group_by(Imp_Uniq) %>%
+  summarise(Avg_LZ_area = mean(LZ_Area, na.rm = TRUE))
 
-EP %>%
-  group_by(Group) %>%
-  ggplot(aes(Group, LZ_Area, fill = Pop)) +
-  geom_boxplot(outlier.shape = NA) +
-  geom_jitter(size = 3.5, alpha = 0.5, width = 0.1) +
-  scale_fill_manual(values = c("Lowland" = "#F4C552", "Highland" = "#247BB1")) +
-  theme_classic() +
-  labs(y = expression(bold("Labyrinth Zone Area (mm"^2*")")), x = NULL) +
-  theme(legend.position = "none") +
-  theme(
-    axis.title.y = element_text(face = "bold", size = 24, color = "black", margin = margin(r = 15)),
-    axis.text.x = element_text(face = "bold", size = 10),
-    axis.title.x = element_text(face = "bold", size = 20),
-    axis.text.y = element_text(face = "bold", size = 20, color = "black"),
-    plot.title = element_text(face = "bold", size = 24, hjust = 0.5), 
-    legend.text = element_text(face = "bold", size = 20),
-    legend.title = element_blank())
+EP = EP %>%
+  left_join(Avg_ImpSite, by = "Imp_Uniq") %>%
+  distinct(Imp_Uniq, .keep_all = TRUE)
+
+
+# LZ
 
 EP %>%
   group_by(Group) %>%
@@ -79,8 +74,7 @@ EP %>%
     legend.text = element_blank(),
     legend.title = element_blank())
 
-
-# ggsave("Plots/Placental_Histology/LZ_Quant.pdf", width = 7, height = 6, units = "in", dpi = 300)
+#ggsave("Plots/Placental_Histology/LZ_Quant.pdf", width = 7, height = 6, units = "in", dpi = 300)
 
 
 # Progenitor area
@@ -89,84 +83,49 @@ EP %>%
   group_by(Group) %>%
   ggplot(aes(Group, Prog_Sum, fill = Pop)) +
   geom_boxplot(outlier.shape = NA) +
-  geom_jitter(size = 3.5, alpha = 0.5, width = 0.1) +
   scale_fill_manual(values = c("Lowland" = "#F4C552", "Highland" = "#247BB1")) +
   theme_classic() +
-  labs(y = expression(bold("Prog Area (mm"^2*")")), x = NULL) +
+  geom_jitter(size = 4, width = 0.1, alpha = 0.7) +
   theme(legend.position = "none") +
+  labs(y = expression(bold("Fetal Progenitor Area (mm"^2*")")), x = NULL) +
+  ylim(0.15, 1.8)+
   theme(
     axis.title.y = element_text(face = "bold", size = 24, color = "black", margin = margin(r = 15)),
-    axis.text.x = element_text(face = "bold", size = 10),
-    axis.title.x = element_text(face = "bold", size = 20),
+    axis.title.x = element_blank(),
     axis.text.y = element_text(face = "bold", size = 20, color = "black"),
-    plot.title = element_text(face = "bold", size = 24, hjust = 0.5), 
-    legend.text = element_text(face = "bold", size = 20),
-    legend.title = element_blank())
+    axis.text.x = element_blank(),
+    plot.title = element_text(face = "bold", size = 24, hjust = 0.5),
+    legend.text = element_blank(),
+    legend.title = element_blank(),
+    plot.margin = margin(t = 10, r = 10, b = 10, l = 35))
 
-# EP %>%
-#   group_by(Group) %>%
-#   ggplot(aes(Group, Prog_Sum, fill = Pop)) +
-#   geom_boxplot(outlier.shape = NA) +
-#   scale_fill_manual(values = c("Lowland" = "#F4C552", "Highland" = "#247BB1")) +
-#   theme_classic() +
-#   geom_jitter(size = 4, width = 0.1, alpha = 0.7) +
-#   theme(legend.position = "none") +
-#   labs(y = expression(bold("Fetal Progenitor Area (mm"^2*")")), x = NULL) +
-#   ylim(0.15, 1.8)+
-#   theme(
-#     axis.title.y = element_text(face = "bold", size = 24, color = "black", margin = margin(r = 15)),
-#     axis.title.x = element_blank(),
-#     axis.text.y = element_text(face = "bold", size = 20, color = "black"),
-#     axis.text.x = element_blank(),
-#     plot.title = element_text(face = "bold", size = 24, hjust = 0.5), 
-#     legend.text = element_blank(),
-#     legend.title = element_blank(),
-#     plot.margin = margin(t = 10, r = 10, b = 10, l = 35))
-# 
-#  ggsave("Plots/Placental_Histology/Prog_Quant.pdf", width = 7, height = 6, units = "in", dpi = 300)
+#ggsave("Plots/Placental_Histology/Prog_Quant.pdf", width = 7, height = 6, units = "in", dpi = 300)
 
  
 
 # Progenitor / LZ
+
  EP %>%
    group_by(Group) %>%
    ggplot(aes(Group, Prog_LZ, fill = Pop)) +
    geom_boxplot(outlier.shape = NA) +
-   geom_jitter(size = 3.5, alpha = 0.5, width = 0.1) +
    scale_fill_manual(values = c("Lowland" = "#F4C552", "Highland" = "#247BB1")) +
    theme_classic() +
-   labs(y = expression(bold("Relative Progenitor Area \n (% of Labyrinth Zone)")), x = NULL) +
+   geom_jitter(size = 6.5, width = 0.1, alpha = 0.7) +
    theme(legend.position = "none") +
+   labs(y = expression(bold("Relative Progenitor Area \n (% of Labyrinth Zone)")), x = NULL) +
+   ylim(0.01, 0.7) +
    theme(
      axis.title.y = element_text(face = "bold", size = 24, color = "black", margin = margin(r = 15)),
-     axis.text.x = element_text(face = "bold", size = 10),
-     axis.title.x = element_text(face = "bold", size = 20),
+     axis.title.x = element_blank(),
      axis.text.y = element_text(face = "bold", size = 20, color = "black"),
-     plot.title = element_text(face = "bold", size = 24, hjust = 0.5), 
-     legend.text = element_text(face = "bold", size = 20),
-     legend.title = element_blank())
+     axis.text.x = element_blank(),
+     plot.title = element_text(face = "bold", size = 24, hjust = 0.5),
+     legend.text = element_blank(),
+     legend.title = element_blank(),
+     plot.margin = margin(t = 10, r = 10, b = 10, l = 35))
 
- # EP %>%
- #   group_by(Group) %>%
- #   ggplot(aes(Group, Prog_LZ, fill = Pop)) +
- #   geom_boxplot(outlier.shape = NA) +
- #   scale_fill_manual(values = c("Lowland" = "#F4C552", "Highland" = "#247BB1")) +
- #   theme_classic() +
- #   geom_jitter(size = 6.5, width = 0.1, alpha = 0.7) +
- #   theme(legend.position = "none") +
- #   labs(y = expression(bold("Relative Progenitor Area \n (% of Labyrinth Zone)")), x = NULL) +
- #   ylim(0.01, 0.7) +
- #   theme(
- #     axis.title.y = element_text(face = "bold", size = 24, color = "black", margin = margin(r = 15)),
- #     axis.title.x = element_blank(),
- #     axis.text.y = element_text(face = "bold", size = 20, color = "black"),
- #     axis.text.x = element_blank(),
- #     plot.title = element_text(face = "bold", size = 24, hjust = 0.5),
- #     legend.text = element_blank(),
- #     legend.title = element_blank(),
- #     plot.margin = margin(t = 10, r = 10, b = 10, l = 35))
- # 
- # ggsave("Plots/Placental_Histology/ProgLZ_Quant.pdf", width = 7, height = 6, units = "in", dpi = 300)
+ #ggsave("Plots/Placental_Histology/ProgLZ_Quant.pdf", width = 7, height = 6, units = "in", dpi = 300)
 
 
 
