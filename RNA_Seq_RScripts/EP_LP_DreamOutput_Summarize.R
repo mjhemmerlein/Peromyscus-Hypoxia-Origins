@@ -293,6 +293,48 @@ sum(LP_JZ_Summary$APRI == "TRUE")
 # write.csv(LP_ISO_Summary, "RNA_Seq_Output/LP_ISO_Ortho_Summary.csv")
 
 
+# Hypoxia only genes 
+
+EP_ISO_BW = read_csv("RNA_Seq_Output/Dream_RawFiles/EP_BW_HypOnly_dreamISO_o2DE.csv")
+colnames(EP_ISO_BW)[1] = "Gene_ID"
+
+EP_ISO_BW = EP_ISO_BW %>%
+  select(Gene_ID, logFC, P.Value, adj.P.Val) %>%
+  mutate(BW_O2_SIG = ifelse(adj.P.Val < 0.05, "SIG", "NA")) %>% 
+  rename(BW_O2_logFC = logFC) %>% 
+  rename(BW_O2_P.Val = P.Value) %>% 
+  rename(BW_O2_adj_P.Val = adj.P.Val)
+
+EP_ISO_ME = read_csv("RNA_Seq_Output/Dream_RawFiles/EP_ME_HypOnly_dreamISO_o2DE.csv")
+colnames(EP_ISO_ME)[1] = "Gene_ID"
+
+EP_ISO_ME = EP_ISO_ME %>%
+  select(Gene_ID, logFC, P.Value, adj.P.Val) %>%
+  mutate(ME_O2_SIG = ifelse(adj.P.Val < 0.05, "SIG", "NA")) %>% 
+  rename(ME_O2_logFC = logFC) %>% 
+  rename(ME_O2_P.Val = P.Value) %>% 
+  rename(ME_O2_adj_P.Val = adj.P.Val)
+
+
+EP_ISO_Summary = left_join(EP_ISO_BW, EP_ISO_ME, by = "Gene_ID")
+
+# Summary
+sum(EP_ISO_Summary$BW_O2_SIG == "SIG")
+sum(EP_ISO_Summary$ME_O2_SIG == "SIG")
+
+#write.csv(EP_ISO_Summary, "RNA_Seq_Output/EP_HypOnly_ISO_Ortho_Summary.csv")
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Overlap between EP and LP in ISOQUANT

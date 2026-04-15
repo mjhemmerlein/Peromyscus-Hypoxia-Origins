@@ -12,8 +12,16 @@ library(Matrix)
 # Hypoxia Sensitive genes only
 
 EP_Summary = read_xlsx("RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx")
-Hypoxia_genes = EP_Summary %>%
+
+gene_class <- EP_Summary %>%
   filter(O2_SIG == "SIG" | IXN_SIG == "SIG") %>%
+  mutate(Category = case_when(
+    IXN_SIG == "SIG" ~ "IXN_SIG",
+    O2_SIG == "SIG" ~ "O2_SIG")) %>%
+  distinct(Pman_GeneID, .keep_all = TRUE)
+
+Hypoxia_genes= gene_class %>%
+  filter(Category == "O2_SIG") %>%
   pull(Pman_GeneID)
 
 # Combined Analysis  ------------------
