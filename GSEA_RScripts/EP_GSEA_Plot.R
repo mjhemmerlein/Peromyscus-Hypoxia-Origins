@@ -17,13 +17,10 @@ cat(paste("Loaded", length(gene_sets), "gene sets\n"))
 # Read in data
 EP_ISO_Strain <- read_xlsx("RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx")
 
-
 # LOWLAND ONLY ------
 # Ranked genes
 rankings_low <- sign(EP_ISO_Strain$BW_O2_logFC)*(-log10(EP_ISO_Strain$BW_O2_P.Val)) # signed p values from spatial DGE as ranking
 names(rankings_low) <- EP_ISO_Strain$Mus_GeneID # genes as names
-
-head(rankings_low)
 
 rankings_low <- sort(rankings_low, decreasing = TRUE) # sort genes by ranking
 plot(rankings_low)
@@ -87,6 +84,8 @@ plot(rankings_high)
 
 max(rankings_high)
 min(rankings_high)
+
+rankings_high <- rankings_high[!duplicated(names(rankings_high))]
 
 ggplot(data.frame(gene_symbol = names(rankings_high)[1:50], ranks = rankings_high[1:50]), aes(gene_symbol, ranks)) + 
   geom_point() +

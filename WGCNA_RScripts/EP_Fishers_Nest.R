@@ -14,11 +14,11 @@ EP_BW = read_xlsx("RNA_Seq_Output/EP_ISO_Ortho_Summary.xlsx")
 IXN <- EP_BW %>%
   filter(IXN_SIG == "SIG")
 
-POP <- EP_BW %>%
-  filter(strain_SIG == "SIG", IXN_SIG != "SIG")
-
 HYP <- EP_BW %>%
   filter(O2_SIG == "SIG", IXN_SIG != "SIG")
+
+POP <- EP_BW %>%
+  filter(strain_SIG == "SIG", IXN_SIG != "SIG")
 
 # Get unique module colors
 colors <- unique(BW$ModuleColor)
@@ -87,9 +87,9 @@ fisher_POP <- compute_fisher(POP, "EP_BW_Modules",
 
 print(fisher_POP$fisher_table[[1]])
 
-# fisher_POP_filtered <- fisher_POP %>%
-#  select(-fisher_table)
-# write.csv(fisher_POP_filtered, "EP_WGCNA_Output/EP_Fishers_POP.csv", row.names = FALSE)
+fisher_POP_filtered <- fisher_POP %>%
+ select(-fisher_table)
+write.csv(fisher_POP_filtered, "EP_WGCNA_Output/EP_Fishers_POP.csv", row.names = FALSE)
 
 # HYPOXIA
 fisher_HYP <- compute_fisher(HYP, "EP_BW_Modules",
@@ -99,9 +99,9 @@ fisher_HYP <- compute_fisher(HYP, "EP_BW_Modules",
 
 print(fisher_HYP$fisher_table[[1]])
 
-# fisher_HYP_filtered <- fisher_HYP %>%
-#  select(-fisher_table)
-# write.csv(fisher_HYP_filtered, "EP_WGCNA_Output/EP_Fishers_HYP.csv", row.names = FALSE)
+fisher_HYP_filtered <- fisher_HYP %>%
+ select(-fisher_table)
+write.csv(fisher_HYP_filtered, "EP_WGCNA_Output/EP_Fishers_HYP.csv", row.names = FALSE)
 
 fisher_IXN <- compute_fisher(IXN, "EP_BW_Modules",
                              total_genes = 20938,
@@ -110,9 +110,9 @@ fisher_IXN <- compute_fisher(IXN, "EP_BW_Modules",
 
 print(fisher_IXN$fisher_table[[1]])
 
-# fisher_IXN_filtered <- fisher_IXN %>%
-#  select(-fisher_table)
-# write.csv(fisher_IXN_filtered, "EP_WGCNA_Output/EP_Fishers_IXN.csv", row.names = FALSE)
+fisher_IXN_filtered <- fisher_IXN %>%
+ select(-fisher_table)
+write.csv(fisher_IXN_filtered, "EP_WGCNA_Output/EP_Fishers_IXN.csv", row.names = FALSE)
 
 
 
