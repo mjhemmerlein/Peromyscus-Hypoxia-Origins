@@ -41,9 +41,6 @@
 
 ### Output:
 - Differential expression counts tables
-- Combined population files - Strain (Population), O2 (Hypoxia), IXN (interaction)
-- Lowland only (BW) - Strain (Population), O2 (Hypoxia), IXN (interaction)
-- Highland only (ME) - Strain (Population), O2 (Hypoxia), IXN (interaction)
 
 ## Summary files of differential expression analyses
 ### Input
