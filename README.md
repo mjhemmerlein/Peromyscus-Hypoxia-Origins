@@ -1,4 +1,5 @@
-# Read me associated with: Early metabolic reprogramming in the placenta shapes resilience to gestational hypoxia in high-elevation deer mice
+### Read me associated with: 
+# Early metabolic reprogramming in the placenta shapes resilience to gestational hypoxia in high-elevation deer mice
 
 # Pipeline Scripts
 ## Pipeline for Annotation Generation
@@ -6,7 +7,7 @@
 - HiFi fastq files available on NCBI: [link]
 
 ### Pipeline scripts:
-- IsoQuant.sh
+- `IsoQuant.sh`
 
 ## Pipeline for RNA sequencing:
 ### Input: 
@@ -39,14 +40,14 @@
 - `LP_JZ_Dream.R` - Late pregnancy junctional zone DE counts from combined populations, lowland only, highland only
 
 ### Output:
-- Differential expression counts tables found in `RNA_Seq_Output/Dream_RawFiles`
+- Differential expression counts tables
 - Combined population files - Strain (Population), O2 (Hypoxia), IXN (interaction)
 - Lowland only (BW) - Strain (Population), O2 (Hypoxia), IXN (interaction)
 - Highland only (ME) - Strain (Population), O2 (Hypoxia), IXN (interaction)
 
 ## Summary files of differential expression analyses
 ### Input
-- Differential expression counts tables found in Dream_RawFiles
+- Differential expression counts tables
 
 ### Scripts found in `RNA_Seq_RScripts`:
 - `EP_LP_DreamOutput_Summarize.R`
@@ -55,7 +56,7 @@
 - EP_ISO_Ortho_Summary.xlsx
 - LP_ISO_Ortho_Summary.xlsx
 - LP_JZ_ISO_Ortho_Summary.xlsx
-- Combination of these files is Dataset_S1.xlsx
+- Combination of these files is `Dataset_S1.xlsx`
 
 # Figures
 ## Figure 1 - Fetal Vasculature
@@ -97,10 +98,10 @@
 - LP_Pman_ExtMMFrac_readcounts_Exon.xlsx
 
 ### Scripts found in RNA_Seq_RScripts
-- SharedStrain_Plot.R - Figure 4 plots
-- EP_LP_Gene_Plots.R - Figure 4 representative gene plots
+- `SharedStrain_Plot.R` - Figure 4 plots
+- `EP_LP_Gene_Plots.R` - Figure 4 representative gene plots
 
-## Figure 4 - WGCNA_RScripts
+## Figure 5 - WGCNA_RScripts
 
 
 
