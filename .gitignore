@@ -10,4 +10,5 @@ RNA_Seq_Output/LP_ISO_Ortho_Summary.xlsx
 RNA_Seq_Output/EP_LP_SharedStrain.csv
 EP_GOEnrichment_Output/
 EP_GSEA_Output/
+RNA_Seq_Output
 
