@@ -53,7 +53,7 @@
 - EP_ISO_Ortho_Summary.xlsx
 - LP_ISO_Ortho_Summary.xlsx
 - LP_JZ_ISO_Ortho_Summary.xlsx
-- Combination of these files is `Dataset_S1.xlsx`
+- Combination of these files is `Dataset_S1.xlsx`, which is available on Dryad [link]
 
 # Figures
 ## Figure 1 - Fetal Vasculature
