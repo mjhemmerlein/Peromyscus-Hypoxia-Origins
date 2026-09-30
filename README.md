@@ -38,6 +38,7 @@
 - `EP_Dream.R` - Early pregnancy DE counts from combined populations, lowland only, highland only
 - `LP_Dream.R` - Late pregnancy labyrinth zone DE counts from combined populations, lowland only, highland only
 - `LP_JZ_Dream.R` - Late pregnancy junctional zone DE counts from combined populations, lowland only, highland only
+- `EP_IXN_ReactionNorm.R` - graphs reaction norms for interaction genes, Table S6
 
 ### Output:
 - Differential expression counts tables
@@ -63,8 +64,8 @@
 - Output of quantification: EP_BW_ME_Quantification.xlsx
 
 ### Scripts found in `Placental_Histology`
-- `ProgenitorQuant_Plot.R` - Figure 1 plots
-- `ProgenitorQuant.R` - Figure 1 statistics, Table S5
+- `ProgenitorQuant_Plot.R` - generate plot
+- `ProgenitorQuant.R`- plot statistics, Table S5
 
 ## Figure 2 - Hypoxia heatmap & respresentative gene plots
 ### Input:
@@ -75,15 +76,16 @@
 - EP_ISO_Ortho_Summary.xlsx
 
 ### Scripts found in `RNA_Seq_RScripts`:
-- EP_ZScore.R - Figure 2 heatmap plot
-- EP_LP_Gene_Plots.R - Figure 2 representative gene plots
+- `EP_ZScore.R` - generate heatmap
+- `EP_LP_Gene_Plots.R` - generate representative gene plots
 
 ## Figure 3 - GSEA
 ### Input:
 - EP_ISO_Ortho_Summary.xlsx
 
 ### Scripts found in `GSEA_RScripts`
-- EP_GSEA_Plot.R - Figure 3 plot
+- `EP_GSEA_Plot.R` - generate plot, Table S7
+- `EP_GSEA_PBS.R`, - determine leading edge genes under selection, Table S8
 
 ## Figure 4 - Population differences across gestation
 ### Input:
@@ -95,12 +97,22 @@
 - LP_Pman_ExtMMFrac_readcounts_Exon.xlsx
 
 ### Scripts found in RNA_Seq_RScripts
-- `SharedStrain_Plot.R` - Figure 4 plots
-- `EP_LP_Gene_Plots.R` - Figure 4 representative gene plots
+- `SharedStrain_Plot.R` - generate plot
+- `EP_LP_Gene_Plots.R` - generate representative gene plots
 
 ## Figure 5 - WGCNA_RScripts
+### Input:
+- MetaData_EP.xlsx
+- MetaData_LP.xlsx
+- EP_Pman_ExtMMFrac_readcounts_Exon.xlsx
+- LP_Pman_ExtMMFrac_readcounts_Exon.xlsx
 
-
+### Scripts found in WGCNA_RScripts
+- `EP_WGCNA_PowerTest.R` - testing multiple softPower values to achieve scale-free topology
+- `EP_WGCNA_BWME.R` - generate network for lowlanders (BW) and highlanders (ME) separately, Table S9, S10
+- `EP_WGCNAnetPres.R` - determine network preservation between populations in early pregnancy, generates plot
+- `EP_WGCNA_GOEnrich.R` - run GO analysis on each lowland module, Table S12, S13, S14, S15
+- `EP_Fishers_Nest.R` - Fishers exact test to determine enrichment/depletion of DE genes within each module, Table S11, generates plot
 
 
 
