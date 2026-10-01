@@ -12,7 +12,7 @@
 ## Pipeline for RNA sequencing:
 ### Input: 
 - Fastq files available on NCBI
-- Early pregnancy files: [link]
+- [Early pregnancy files](https://www.ncbi.nlm.nih.gov/sra/PRJNA965800)
 - Late pregnancy files: [link]
 
 ### Pipeline scripts:
